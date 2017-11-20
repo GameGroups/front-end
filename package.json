@@ -1,0 +1,62 @@
+{
+  "name": "GameGroups",
+  "version": "0.0.1",
+  "description": "GameGroups front-end repository",
+  "main": "./src/index.jsx",
+  "scripts": {
+    "build": "npm run lint && webpack --config ./webpack.config.prod.js",
+    "develop": "webpack-dev-server --open --config ./webpack.config.develop.js",
+    "lint": "eslint *.js ./src/**/**/*.spec.*",
+    "test": "jest --config ./jest.config.json"
+  },
+  "repository": {
+    "url": "https://github.com/GameGroups/front-end.git",
+    "type": "git"
+  },
+  "author": "pjholyoke@gmail.com",
+  "contributors": [{
+    "name": "Peter Holyoke",
+    "email": "pjholyoke@email.neit.edu"
+  }],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.17.0",
+    "bootstrap": "^4.0.0-beta.2",
+    "jquery": "^3.2.1",
+    "moment": "^2.19.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.9.0",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "eslint": "^4.8.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-react": "^7.4.0",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "favicons-webpack-plugin": "^0.0.7",
+    "file-loader": "^1.1.5",
+    "html-webpack-plugin": "^2.30.1",
+    "http-server": "^0.10.0",
+    "jest": "^21.2.1",
+    "node-sass": "^4.5.3",
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react-test-renderer": "^16.0.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
+    "uglifyjs-webpack-plugin": "^1.0.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1",
+    "webpack-md5-hash": "^0.0.5",
+    "webpack-merge": "^4.1.0"
+  }
+}
