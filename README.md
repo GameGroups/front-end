@@ -3,6 +3,8 @@ GameGroups front-end repository, built with react, webpack and babel. Check out 
 
 ### Setup steps
 
+If it is not installed already, make sure that node.js is installed, version 6.12 or above.
+
 1. Type ``` yarn install ``` to install the required dependencies.
 2. Type ``` yarn develop ``` to run the project in development mode.
 
