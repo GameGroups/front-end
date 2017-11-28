@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Header from './hello-world';
+import HelloWorld from './hello-world';
 
 configure({ adapter: new Adapter() });
 
 describe('Header component', () => {
-  let header;
+  let hello;
 
   beforeEach(() => {
-    header = mount(<Header />);
+    hello = mount(<HelloWorld />);
   });
 
   it('should not be null', () => {
-    expect(header).not.toBeNull();
-    expect(header.find('.header').length).toEqual(1);
+    expect(hello).not.toBeNull();
+    expect(hello.find('.hello-world').length).toEqual(1);
   });
 });
