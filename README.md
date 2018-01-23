@@ -1,20 +1,24 @@
 # GameGroups Front End
-GameGroups front-end repository, built with react, webpack and babel. Check out our [wiki](https://github.com/GameGroups/website-docs/wiki) for more information about the project.
 
-### Setup steps
+> GameGroups front-end repository, built with Vue.js, webpack and babel.
+Check out our wiki for more information about the project.
 
-If it is not installed already, make sure that node.js is installed, version 6.12 or above.
+Project was generated using https://github.com/vuejs-templates/webpack,
+check out that repository for additional information and troubleshooting.
 
-1. Type ``` yarn install ``` to install the required dependencies.
-2. Type ``` yarn develop ``` to run the project in development mode.
+## Build Setup
 
-### Other scripts
+``` bash
+# install dependencies
+npm install
 
-### ``` yarn build ```
-Builds and minifies the project, and output the files to the `/build` directory.
+# serve with hot reload at localhost:8080
+npm run dev
 
-### ``` yarn lint ```
-Runs eslint on the project
+# build for production with minification
+npm run build
 
-### ``` yarn test ```
-Runs unit tests for the project. Add the ``--watch`` flag to automatically rerun the tests when code changes.
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
