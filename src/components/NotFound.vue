@@ -10,22 +10,22 @@
 </template>
 
 <script>
-  export default {
-    name: 'NotFound',
-    metaInfo: {
-      title: '404 Page Not Found', // Set a title
-      titleTemplate: '%s', // Title is now "GameGroups - Hello World"
-      htmlAttrs: {
-        lang: 'en',
-        amp: undefined // "amp" has no value
-      }
-    },
-    data () {
-      return {
-        msg: '404 - Page not found!'
-      };
+export default {
+  name: 'NotFound',
+  metaInfo: {
+    title: '404 Page Not Found', // Set a title
+    titleTemplate: '%s', // Title is now "GameGroups - Hello World"
+    htmlAttrs: {
+      lang: 'en',
+      amp: undefined // "amp" has no value
     }
+  },
+  data () {
+    return {
+      msg: '404 - Page not found!'
+    };
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

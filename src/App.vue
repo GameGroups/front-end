@@ -2,9 +2,11 @@
   <div id="app">
     <nav-bar></nav-bar>
 
-    <div class="container-fluid">
+    <div class="container-fluid root">
       <router-view/>
     </div>
+
+    <app-footer></app-footer>
   </div>
 </template>
 
@@ -13,10 +15,12 @@ import 'popper.js';
 import 'jquery';
 import 'bootstrap';
 import NavBar from './components/NavBar.vue';
+import AppFooter from './components/AppFooter.vue';
 
 export default {
   name: 'App',
   components: {
+    AppFooter,
     NavBar
   }
 }
@@ -31,5 +35,9 @@ export default {
   .btn:focus,.btn:active {
     outline: none !important;
     box-shadow: none;
+  }
+
+  .root {
+    min-height: 97.5vh;
   }
 </style>
