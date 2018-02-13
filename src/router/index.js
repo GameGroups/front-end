@@ -19,7 +19,7 @@ export default new Router({
     { path: '/login', component: Login },
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
-    { path: '/logged-in', component: LoggedIn },
+    { path: '/dashboard', component: LoggedIn },
     { path: '/reset_password', component: NotFound }, // Change me
     { path: '/confirm_reset_password', component: NotFound }, // Change me
     {

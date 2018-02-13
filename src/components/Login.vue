@@ -58,7 +58,7 @@ export default {
           this.error = err;
         } else {
           store.dispatch('login');
-          this.$router.replace(this.$route.query.redirect || '/logged-in');
+          this.$router.replace(this.$route.query.redirect || '/dashboard');
         }
       });
     }
@@ -70,7 +70,7 @@ export default {
       } else {
         this.loggedIn = loggedIn;
         if (loggedIn) {
-          this.$router.replace(this.$route.query.redirect || '/logged-in');
+          this.$router.replace(this.$route.query.redirect || '/dashboard');
         }
       }
     });
