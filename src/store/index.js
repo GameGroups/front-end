@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+import jwtDecode from 'jwt-decode';
+import cognitoAuth from '../cognito';
 
 Vue.use(Vuex);
 
@@ -14,6 +16,18 @@ const mutations = {
   },
   SET_FALSE (state) {
     state.loggedIn = false;
+  },
+  GET_USER (state) {
+    cognitoAuth.getIdToken((err, jwtToken) => {
+      if (err) {
+        console.log("Dashboard: Couldn't get the session:", err, err.stack);
+        return;
+      }
+
+      this.token = jwtDecode(jwtToken);
+      state.currentUser = this.token;
+      // state.currentUser = cognitoAuth.getCurrentUser();
+    });
   }
 };
 
@@ -24,6 +38,10 @@ const actions = {
 
   logout ({ commit }) {
     commit('SET_FALSE');
+  },
+
+  getUser ({ commit }) {
+    commit('GET_USER');
   }
 };
 

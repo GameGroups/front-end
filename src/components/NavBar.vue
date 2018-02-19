@@ -23,10 +23,18 @@
           <a class="nav-link">Games</a>
         </router-link>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <router-link class="btn btn-outline-danger" tag="button" to="/logout" v-if="$store.state.loggedIn">Logout</router-link>
-        <router-link class="nav-link btn-login" tag="button" to="/login" v-else>Login</router-link>
+      <form class="form-inline my-2 my-lg-0 d-none d-md-flex" v-if="$store.state.loggedIn">
+        <div class="logged-in-user">
+          <router-link class="displayname" tag="span" to="/profile">{{ $store.state.currentUser.nickname }}</router-link>
+          <span class="settings">
+            <router-link to="/account-settings">Settings</router-link> |
+            <router-link to="/logout">Logout</router-link>
+          </span>
+        </div>
+
+        <router-link to="/profile"><img src="http://via.placeholder.com/50x50" class="rounded float-left avatar" alt="Profile picture" v-if="$store.state.loggedIn"></router-link>
       </form>
+      <router-link class="nav-link btn-login" tag="button" to="/login" v-else>Login</router-link>
       <router-link class="nav-item" to="/signup" v-if="!$store.state.loggedIn">
         <a class="nav-link btn-signup">Sign Up</a>
       </router-link>
@@ -41,6 +49,12 @@ export default {
   name: 'NavBar',
   data () {
     return {};
+  },
+  methods: {},
+  mounted: function () {
+    store.dispatch('getUser');
+    console.log(store.state.currentUser.nickname);
+    // console.log(store.currentUser);
   }
 }
 </script>
@@ -100,5 +114,26 @@ export default {
     fill: #fff;
     filter: url(#color-overlay-2);
     fill-rule: evenodd;
+  }
+
+  .logged-in-user {
+    text-align: right;
+    color: #CFCCCB;
+    margin-right: 1rem;
+
+    .displayname {
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .settings {
+      margin-bottom: 0;
+      display: block;
+    }
+  }
+
+  .avatar {
+    flex-direction: row !important;
   }
 </style>
