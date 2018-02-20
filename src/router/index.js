@@ -6,6 +6,7 @@ import Signup from '@/components/Signup';
 import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
+import Profile from '@/components/Profile';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
@@ -26,6 +27,7 @@ export default new Router({
     { path: '/reset_password', component: ResetPassword }, // Change me
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
+    { path: '/profile', component: Profile },
     {
       // 404 for all routes that don't match
       path: '*',
