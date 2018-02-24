@@ -2,7 +2,7 @@
   <div class="sign-up row  col-centered">
     <div class="col-sm-6 col-sm-offset-6 form-col">
       <h2>Sign Up</h2>
-      <p class="instructions">Fields marked with an asterisk are required</p>
+      <p class="instructions">Fields marked with an asterisk " <span class="red">*</span> " are required</p>
 
       <div class="alert alert-danger" v-if="error">
         <p v-if="error" class="error">{{ error.message }}</p>
@@ -10,25 +10,30 @@
 
       <form @submit.prevent="prepare">
        <div class="form-group required">
+         <span class="form-label">Username</span><br/>
           <label class="control-label"></label>
           <input type="text" name="username" class="form-control" placeholder="Enter your Username" v-model="user.username" required>
         </div>
 
         <div class="form-group required">
+          <span class="form-label">Display Name</span><br/>
           <label class="control-label"></label>
           <input type="text" name="nickname" class="form-control" placeholder="Enter your Display Name" v-model="user.nickname" required>
         </div>
 
         <div class="form-group required">
+          <span class="form-label">Email</span><br/>
           <label class="control-label"></label>
           <input type="text" name="email" class="form-control" placeholder="Enter your Email" v-model="user.email" required>
         </div>
 
         <div class="form-group required">
+          <span class="form-label">Password</span><br/>
           <label class="control-label"></label>
           <input type="password" class="form-control" placeholder="Enter your Password" v-model="user.password" required>
         </div>
         <div class="form-group required">
+          <span class="form-label">Region</span><br/>
           <label class="control-label"></label>
           <select class="form-control" id="listRegion" name="region" v-model="customAttr.region" required>
             <option value="">Select a Region...</option>
@@ -43,6 +48,7 @@
           </select>
         </div>
         <div class="form-group required">
+          <span class="form-label">Skill Level</span><br/>
           <label class="control-label"></label>
           <select class="form-control" id="listSkill" name="skill-level" v-model="customAttr.skill" required>
             <option value="">Select a Skill Level...</option>
@@ -56,6 +62,7 @@
           </select>
         </div>
         <div class="form-group required">
+          <span class="form-label">Time Commitment</span><br/>
           <label class="control-label"></label>
           <select class="form-control" id="listTime" name="time-commitement" v-model="customAttr.timeCommitment" required>
             <option value="">Select when you game the most...</option>
@@ -66,7 +73,7 @@
             <option>Unsure</option>
           </select>
         </div>
-        <p>Select your top 3 Games</p>
+        <span class="form-label noPadding">Select your top 3 games</span><br/>
         <div id="game1" class="form-group required">
           <label class="control-label">1. </label>
           <select class="form-control gameSelect" required>
@@ -93,16 +100,18 @@
           </select>
         </div>
         <div class="form-group">
+          <span class="form-label noPadding">Tagline</span><br/>
           <input type="text" name="tagline" class="form-control optionalInput" placeholder="Enter your Tag Line" v-model="customAttr.tagline" />
         </div>
         <div class="form-group">
+          <span class="form-label noPadding">Bio</span><br/>
           <textarea name="bio" class="form-control optionalInput" placeholder="Enter your Bio" v-model="customAttr.bio" />
         </div>
-        <button class="btn btn-primary">Sign Up</button>
-        <button class="btn btn-danger">Cancel</button>
+        <div class="btnContainer">
+            <button class="btn btn-info">Sign Up</button>
+            <button class="btn btn-light">Cancel</button>
+        </div>
       </form>
-
-      <div class="marketing"></div>
     </div>
   </div>
 </template>
@@ -185,6 +194,7 @@ export default {
   .sign-up {
     margin-top: 35px;
     max-width: 70vh;
+    margin-bottom: 35px;
   }
   .form-group.required .control-label:before {
     content:"* ";
@@ -202,7 +212,7 @@ export default {
     max-width: 300px;
   }
   .instructions {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
   }
   .gameSelect {
     max-width: calc(95% - 17px);
@@ -212,5 +222,26 @@ export default {
   }
   .noAst {
     padding-left: 11px;
+  }
+  .btnContainer {
+    text-align: center;
+  }
+  .btn-light {
+    background: #a3a1a1;
+    color: white;
+  }
+  .btn-light:hover {
+    background: #b9b9b9;
+  }
+  .red {
+    color: red;
+  }
+  .form-label {
+    padding-left: 11px;
+    font-weight: bold;
+    font-size: .9em;
+  }
+  .noPadding {
+    padding: 0;
   }
 </style>
