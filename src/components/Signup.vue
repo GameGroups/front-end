@@ -2,9 +2,14 @@
   <div class="sign-up row  col-centered">
     <div class="col-sm-6 col-sm-offset-6 form-col">
       <h2>Sign Up</h2>
-      <p class="instructions">Fields marked with an asterisk " <span class="red">*</span> " are required</p>
+      <div class="instructions-container" v-if="seen">
+        <ul class="instructions"><li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
+          <li>Password must have an uppercase character and numeric character</li>
+        </ul>
+      </div>
 
-      <div class="alert alert-danger" v-if="error">
+      <div class="alert alert-danger" v-if="error || passwordErr">
+        <ul class="errorList error" v-if="passwordErr" v-html="passwordErr">{{ passwordErr }}</ul>
         <p v-if="error" class="error">{{ error.message }}</p>
       </div>
 
@@ -12,25 +17,30 @@
        <div class="form-group required">
          <span class="form-label">Username</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="username" class="form-control" placeholder="Enter your Username" v-model="user.username" required>
+          <input type="text" name="username" class="form-control" v-model="user.username" required>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Display Name</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="nickname" class="form-control" placeholder="Enter your Display Name" v-model="user.nickname" required>
+          <input type="text" name="nickname" class="form-control" v-model="user.nickname" required>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Email</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="email" class="form-control" placeholder="Enter your Email" v-model="user.email" required>
+          <input type="text" name="email" class="form-control" v-model="user.email" required>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Password</span><br/>
           <label class="control-label"></label>
-          <input type="password" class="form-control" placeholder="Enter your Password" v-model="user.password" required>
+          <input type="password" class="form-control" v-model="user.password" required>
+        </div>
+        <div class="form-group required">
+          <span class="form-label">Confirm Password</span><br/>
+          <label class="control-label"></label>
+          <input type="password" class="form-control" v-model="confirmPass" required>
         </div>
         <div class="form-group required">
           <span class="form-label">Region</span><br/>
@@ -100,12 +110,12 @@
           </select>
         </div>
         <div class="form-group">
-          <span class="form-label noPadding">Tagline</span><br/>
-          <input type="text" name="tagline" class="form-control optionalInput" placeholder="Enter your Tag Line" v-model="customAttr.tagline" />
+          <span class="form-label noPadding">Tagline (Limit: 256 Characters)</span><br/>
+          <input type="text" name="tagline" class="form-control optionalInput" v-model="customAttr.tagline" />
         </div>
         <div class="form-group">
-          <span class="form-label noPadding">Bio</span><br/>
-          <textarea name="bio" class="form-control optionalInput" placeholder="Enter your Bio" v-model="customAttr.bio" />
+          <span class="form-label noPadding">Bio (Limit: 500 Characters)</span><br/>
+          <textarea name="bio" class="form-control optionalInput" v-model="customAttr.bio" />
         </div>
         <div class="btnContainer">
             <button class="btn btn-info">Sign Up</button>
@@ -131,6 +141,9 @@ export default {
   data: function () {
     return {
       error: null,
+      passwordErr: null,
+      confirmPass: '',
+      seen: true,
       user: {
         username: '',
         nickname: '',
@@ -155,34 +168,71 @@ export default {
   },
   methods: {
     prepare () {
-      Vue.set(this.user, 'custom:region', this.customAttr.region);
-      Vue.set(this.user, 'custom:skill-level', this.customAttr.skill);
-      Vue.set(this.user, 'custom:time-commitment', this.customAttr.timeCommitment);
-      Vue.set(this.user, 'custom:tagline', this.customAttr.tagline);
-      Vue.set(this.user, 'custom:bio', this.customAttr.bio);
-      // Vue.delete(this.$data, this.$data.region);
-      // this.$data.region = 'testing';
-      this.signup();
+      this.seen = true;
+      let isValid = true;
+      this.passwordErr = null;
+      if (this.user.password !== this.confirmPass) {
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+        this.passwordErr = '<li>Passwords do not match, Please try again</li>';
+        console.log(this.passwordErr);
+        console.log(this.user.password);
+        console.log(this.confirmPass);
+      }
+      if (!this.hasNumber(this.user.password)) {
+        if (this.passwordErr == null) {
+          this.passwordErr = '<li>Password did not conform with policy: Password must have numeric characters</li>';
+        } else {
+          this.passwordErr += '<li>Password did not conform with policy: Password must have numeric characters</li>';
+        }
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+      }
+      if (!this.hasUppercase(this.user.password)) {
+        if (this.passwordErr == null) {
+          this.passwordErr = '<li>Password did not conform with policy: Password must have uppercase characters</li>';
+        } else {
+          this.passwordErr += '<li>Password did not conform with policy: Password must have uppercase characters</li>';
+        }
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+      }
+      if (isValid) {
+        this.passwordErr = null;
+        Vue.set(this.user, 'custom:region', this.customAttr.region);
+        Vue.set(this.user, 'custom:skill-level', this.customAttr.skill);
+        Vue.set(this.user, 'custom:time-commitment', this.customAttr.timeCommitment);
+        Vue.set(this.user, 'custom:tagline', this.customAttr.tagline);
+        Vue.set(this.user, 'custom:bio', this.customAttr.bio);
+        // Vue.delete(this.$data, this.$data.region);
+        // this.$data.region = 'testing';
+        this.signup();
+      }
     },
     signup () {
       this.$cognitoAuth.signup(this.$data.user, (err, result) => {
         if (err) {
-          this.error = err
-          console.error(err)
+          this.seen = false;
+          window.scrollTo(0, 0);
+          this.error = err;
+          console.error(err);
         } else {
-          console.log('Signup successful:', result)
+          console.log('Signup successful:', result);
           this.$router.replace({path: '/confirm', query: {username: this.username}})
         }
       })
+    },
+    hasNumber (myString) {
+      return /\d/.test(myString);
+    },
+    hasUppercase (myString) {
+      return /[A-Z]/.test(myString);
     }
   }
 }
-/* window.onload = function () {
-  var x = document.getElementById('#game1');
-  if (x.selectedIndex === 0) {
-    document.getElementById('#game2').style.display = 'none';
-  }
-} */
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -212,7 +262,16 @@ export default {
     max-width: 300px;
   }
   .instructions {
+    padding-left: 25px;
+  }
+  .instructions>li {
+    margin-bottom: 10px;
+  }
+  .instructions-container {
+    padding: 12px 20px;
+    background: #e9ecef;
     margin-bottom: 25px;
+    border-radius: 0.25rem;
   }
   .gameSelect {
     max-width: calc(95% - 17px);
@@ -243,5 +302,8 @@ export default {
   }
   .noPadding {
     padding: 0;
+  }
+  .errorList {
+    padding-left: 25px;
   }
 </style>
