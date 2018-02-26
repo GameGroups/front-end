@@ -6,6 +6,7 @@ import Signup from '@/components/Signup';
 import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
+import Settings from '@/components/Settings';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -20,6 +21,7 @@ export default new Router({
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
     { path: '/dashboard', component: LoggedIn },
+    { path: '/settings', component: Settings },
     { path: '/reset_password', component: NotFound }, // Change me
     { path: '/confirm_reset_password', component: NotFound }, // Change me
     {
