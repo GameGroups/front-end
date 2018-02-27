@@ -4,12 +4,14 @@
       <h2>Sign Up</h2>
       <div class="instructions-container" v-if="seen">
         <ul class="instructions"><li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
-          <li>Password must have an uppercase character and numeric character</li>
+          <li>Password must have an uppercase character, numeric character, and minimum 8 characters</li>
         </ul>
       </div>
 
       <div class="alert alert-danger" v-if="error || passwordErr">
-        <ul class="errorList error" v-if="passwordErr" v-html="passwordErr">{{ passwordErr }}</ul>
+        <ul class="errorList error" v-if="passwordErr">
+          <li class="errorLi" v-for="error in errorArray" v-bind:key="error">{{ error }}</li>
+        </ul>
         <p v-if="error" class="error">{{ error.message }}</p>
       </div>
 
@@ -83,7 +85,7 @@
             <option>Unsure</option>
           </select>
         </div>
-        <span class="form-label noPadding">Select your top 3 games</span><br/>
+        <!-- <span class="form-label noPadding">Select your top 3 games</span><br/>
         <div id="game1" class="form-group required">
           <label class="control-label">1. </label>
           <select class="form-control gameSelect" required>
@@ -108,17 +110,17 @@
             <option value="game2">Game 2</option>
             <option value="game3">Game 3</option>
           </select>
-        </div>
-        <div class="form-group">
+        </div> -->
+        <div class="form-group noAst">
           <span class="form-label noPadding">Tagline (Limit: 256 Characters)</span><br/>
           <input type="text" name="tagline" class="form-control optionalInput" v-model="customAttr.tagline" />
         </div>
-        <div class="form-group">
+        <div class="form-group noAst">
           <span class="form-label noPadding">Bio (Limit: 500 Characters)</span><br/>
           <textarea name="bio" class="form-control optionalInput" v-model="customAttr.bio" />
         </div>
         <div class="btnContainer">
-            <button class="btn btn-info">Sign Up</button>
+            <button class="btn btn-primary">Sign Up</button>
             <button class="btn btn-light">Cancel</button>
         </div>
       </form>
@@ -141,7 +143,8 @@ export default {
   data: function () {
     return {
       error: null,
-      passwordErr: null,
+      passwordErr: false,
+      errorArray: [],
       confirmPass: '',
       seen: true,
       user: {
@@ -170,35 +173,52 @@ export default {
     prepare () {
       this.seen = true;
       let isValid = true;
-      this.passwordErr = null;
+      this.passwordErr = false;
+      this.errorArray = [];
       if (this.user.password !== this.confirmPass) {
         isValid = false;
         this.seen = false;
         window.scrollTo(0, 0);
-        this.passwordErr = '<li>Passwords do not match, Please try again</li>';
+        this.passwordErr = true;
+        this.errorArray.push('Passwords do not match, Please try again');
         console.log(this.passwordErr);
         console.log(this.user.password);
         console.log(this.confirmPass);
       }
       if (!this.hasNumber(this.user.password)) {
-        if (this.passwordErr == null) {
-          this.passwordErr = '<li>Password did not conform with policy: Password must have numeric characters</li>';
-        } else {
-          this.passwordErr += '<li>Password did not conform with policy: Password must have numeric characters</li>';
-        }
+        this.passwordErr = true
+        this.errorArray.push('Password did not conform with policy: Password must have numeric character(s)')
         isValid = false;
         this.seen = false;
         window.scrollTo(0, 0);
       }
       if (!this.hasUppercase(this.user.password)) {
-        if (this.passwordErr == null) {
-          this.passwordErr = '<li>Password did not conform with policy: Password must have uppercase characters</li>';
-        } else {
-          this.passwordErr += '<li>Password did not conform with policy: Password must have uppercase characters</li>';
-        }
+        this.passwordErr = true
+        this.errorArray.push('Password did not conform with policy: Password must have uppercase character(s)')
         isValid = false;
         this.seen = false;
         window.scrollTo(0, 0);
+      }
+      if (this.user.password.length < 7) {
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+        this.passwordErr = true
+        this.errorArray.push('Password did not conform with policy: Password not long enough (min 8 characters)')
+      }
+      if (this.customAttr.tagline.length > 256) {
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+        this.passwordErr = true
+        this.errorArray.push('Tagline must be less than 256 characters')
+      }
+      if (this.customAttr.bio.length > 500) {
+        isValid = false;
+        this.seen = false;
+        window.scrollTo(0, 0);
+        this.passwordErr = true
+        this.errorArray.push('Bio must be less than 500 characters')
       }
       if (isValid) {
         this.passwordErr = null;
@@ -263,6 +283,8 @@ export default {
   }
   .instructions {
     padding-left: 25px;
+    list-style-type: square;
+    margin-bottom: 0;
   }
   .instructions>li {
     margin-bottom: 10px;
@@ -272,6 +294,7 @@ export default {
     background: #e9ecef;
     margin-bottom: 25px;
     border-radius: 0.25rem;
+    line-height: 1.2;
   }
   .gameSelect {
     max-width: calc(95% - 17px);
@@ -305,5 +328,11 @@ export default {
   }
   .errorList {
     padding-left: 25px;
+    margin-bottom: 0;
+    list-style-type: square;
+  }
+  .errorLi {
+    line-height: 1.2;
+    margin-bottom: 10px;
   }
 </style>
