@@ -9,7 +9,8 @@
     <div class="main-content" v-if="seen">
       <h2>Settings</h2>
       <p>Select an option to the left to edit your settings</p>
-      <p>{{ this.token.email}}</p>
+      <p>{{this.token}}</p>
+      <p>{{this.token['custom:region']}}</p>
     </div>
     <div class="profile-container" v-if="profile">
       <h2>Settings - Edit Profile</h2>
@@ -138,10 +139,6 @@ export default {
     }
   },
   methods: {
-    logout: function () {
-      this.$cognitoAuth.logout();
-      this.$router.replace(this.$route.query.redirect || '/');
-    }
   },
   created: function () {
     this.$cognitoAuth.isAuthenticated((err, loggedIn) => {
@@ -164,7 +161,6 @@ export default {
         }
 
         this.token = jwtDecode(jwtToken);
-        this.user = this.$cognitoAuth.getCurrentUser();
         console.log(this.token);
       });
     } else {
