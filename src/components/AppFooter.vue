@@ -81,7 +81,7 @@ export default {
 
   .resources-container {
     padding: 15px 15px 15px 30px;
-
+    
     a {
       display: block;
     }
