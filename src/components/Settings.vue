@@ -10,6 +10,7 @@
       <h2>Settings</h2>
       <p>Select an option to the left to edit your settings</p>
       <p>{{this.token}}</p>
+      <p>{{this.user}}</p>
       <p>{{this.token['custom:region']}}</p>
     </div>
     <div class="profile-container" v-if="profile">
