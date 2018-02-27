@@ -21,11 +21,7 @@
         <router-link class="nav-item" tag="li" to="/groups">
           <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse.show">Groups</a>
         </router-link>
-
-        <router-link class="nav-item" tag="li" to="/games">
-          <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse.show">Games</a>
-        </router-link>
-
+        
         <router-link class="logout-button nav-item btn btn-danger d-md-none" to="/logout" data-toggle="collapse" data-target=".navbar-collapse.show" v-if="$store.state.loggedIn">Logout</router-link>
       </ul>
       <form class="form-inline my-2 my-lg-0 d-none d-md-flex" v-if="$store.state.loggedIn">

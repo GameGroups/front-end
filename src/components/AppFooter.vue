@@ -10,7 +10,6 @@
     <div class="col-md-6 resources-container">
       <router-link to="/" tag="a" v-on:click.native="scrollUp">Home</router-link>
       <router-link to="/dashboard" tag="a" v-if="$store.state.loggedIn" v-on:click.native="scrollUp">Dashboard</router-link>
-      <router-link to="/games" tag="a" v-on:click.native="scrollUp">Games</router-link>
       <router-link to="/groups" tag="a" v-on:click.native="scrollUp">Groups</router-link>
       <router-link to="/signup" tag="a" v-on:click.native="scrollUp">Sign Up</router-link>
     </div>
