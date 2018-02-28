@@ -12,42 +12,53 @@
         <ul class="errorList error" v-if="passwordErr">
           <li class="errorLi" v-for="error in errorArray" v-bind:key="error">{{ error }}</li>
         </ul>
-        <p v-if="error" class="error">{{ error.message }}</p>
+        <ul class="errorList error" v-if="error">
+          <li class="errorLi error" v-if="error">{{ error.message }}</li>
+        <!-- <p v-if="error" class="error">{{ error.message }}</p> -->
+        </ul>
       </div>
 
-      <form @submit.prevent="prepare">
+      <form @submit.prevent="validateBeforeSubmit">
        <div class="form-group required">
          <span class="form-label">Username</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="username" class="form-control" v-model="user.username" required>
+          <input v-validate="'required|alpha_dash'" type="text" name="Username" :class="{'form-control': true, 'input-error': errors.has('Username') }" v-model="user.username" required>
+          <i v-show="errors.has('Username')"></i>
+          <p v-show="errors.has('Username')" class="help-error">{{ errors.first('Username') }}</p>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Display Name</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="nickname" class="form-control" v-model="user.nickname" required>
+          <input v-validate="'required|alpha_dash'" :class="{'form-control': true, 'input-error': errors.has('Display Name') }" type="text" name="Display Name" v-model="user.nickname" required>
+          <i v-show="errors.has('Display Name')"></i>
+          <p v-show="errors.has('Display Name')" class="help-error">{{ errors.first('Display Name') }}</p>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Email</span><br/>
           <label class="control-label"></label>
-          <input type="text" name="email" class="form-control" v-model="user.email" required>
+          <input v-validate="'required|email'" :class="{'form-control': true, 'input-error': errors.has('Email') }" type="text" name="Email" v-model="user.email" required>
+          <i v-show="errors.has('Email')"></i>
+          <p v-show="errors.has('Email')" class="help-error">{{ errors.first('Email') }}</p>
         </div>
 
         <div class="form-group required">
           <span class="form-label">Password</span><br/>
           <label class="control-label"></label>
-          <input type="password" class="form-control" v-model="user.password" required>
+          <input v-validate="'required|verify_password|min:8|confirmed:Confirm Password'" type="password" :class="{'form-control': true, 'input-error': errors.has('Password') }" v-model="user.password" name="Password" required>
+          <i v-show="errors.has('Password')"></i>
+          <p v-show="errors.has('Password')" class="help-error">{{ errors.first('Password') }}</p>
         </div>
         <div class="form-group required">
           <span class="form-label">Confirm Password</span><br/>
           <label class="control-label"></label>
-          <input type="password" class="form-control" v-model="confirmPass" required>
+          <input type="password" :class="{'form-control': true, 'input-error': errors.has('Password') }" v-model="confirmPass" name="Confirm Password" required>
         </div>
         <div class="form-group required">
           <span class="form-label">Region</span><br/>
           <label class="control-label"></label>
-          <select class="form-control" id="listRegion" name="region" v-model="customAttr.region" required>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Region') }" id="listRegion" name="Region" v-model="customAttr.region" required>
             <option value="">Select a Region...</option>
             <option>US - East</option>
             <option>US - West</option>
@@ -58,11 +69,13 @@
             <option>Asia</option>
             <option>Oceania</option>
           </select>
+          <i v-show="errors.has('Region')"></i>
+          <p v-show="errors.has('Region')" class="help-error">{{ errors.first('Region') }}</p>
         </div>
         <div class="form-group required">
           <span class="form-label">Skill Level</span><br/>
           <label class="control-label"></label>
-          <select class="form-control" id="listSkill" name="skill-level" v-model="customAttr.skill" required>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Skill Level') }" id="listSkill" name="Skill Level" v-model="customAttr.skill" required>
             <option value="">Select a Skill Level...</option>
             <option>Noob</option>
             <option>Casual</option>
@@ -72,11 +85,13 @@
             <option>Semi - Pro</option>
             <option>Pro</option>
           </select>
+          <i v-show="errors.has('Skill Level')"></i>
+          <p v-show="errors.has('Skill Level')" class="help-error">{{ errors.first('Skill Level') }}</p>
         </div>
         <div class="form-group required">
           <span class="form-label">Time Commitment</span><br/>
           <label class="control-label"></label>
-          <select class="form-control" id="listTime" name="time-commitement" v-model="customAttr.timeCommitment" required>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Time Commitment') }" id="listTime" name="Time Commitment" v-model="customAttr.timeCommitment" required>
             <option value="">Select when you game the most...</option>
             <option>Daily</option>
             <option>Weekdays</option>
@@ -84,6 +99,8 @@
             <option>Weekly</option>
             <option>Unsure</option>
           </select>
+          <i v-show="errors.has('Time Commitment')"></i>
+          <p v-show="errors.has('Time Commitment')" class="help-error">{{ errors.first('Time Commitment') }}</p>
         </div>
         <!-- <span class="form-label noPadding">Select your top 3 games</span><br/>
         <div id="game1" class="form-group required">
@@ -113,11 +130,15 @@
         </div> -->
         <div class="form-group noAst">
           <span class="form-label noPadding">Tagline (Limit: 256 Characters)</span><br/>
-          <input type="text" name="tagline" class="form-control optionalInput" v-model="customAttr.tagline" />
+          <textarea v-validate="'max:256'" :class="{'optionalInput': true, 'form-control': true, 'input-error': errors.has('Tagline') }" name="Tagline" v-model="customAttr.tagline" />
+          <i v-show="errors.has('Tagline')"></i>
+          <p v-show="errors.has('Tagline')" class="help-error">{{ errors.first('Tagline') }}</p>
         </div>
         <div class="form-group noAst">
           <span class="form-label noPadding">Bio (Limit: 500 Characters)</span><br/>
-          <textarea name="bio" class="form-control optionalInput" v-model="customAttr.bio" />
+          <textarea v-validate="'max:500'" :class="{'optionalInput': true, 'form-control': true, 'input-error': errors.has('Bio') }" name="Bio" v-model="customAttr.bio" />
+          <i v-show="errors.has('Bio')"></i>
+          <p v-show="errors.has('Bio')" class="help-error">{{ errors.first('Bio') }}</p>
         </div>
         <div class="btnContainer">
             <button class="btn btn-primary">Sign Up</button>
@@ -129,7 +150,19 @@
 </template>
 
 <script>
+
 import Vue from 'vue';
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
+
+VeeValidate.Validator.extend('verify_password', {
+  getMessage: field => `Password must contain at least: 1 uppercase letter, 1 number)`,
+  validate: value => {
+    var strongRegex = new RegExp('^(?=.*\\d)(?=.*[A-Z])');
+    return strongRegex.test(value);
+  }
+});
+
 export default {
   name: 'Signup',
   metaInfo: {
@@ -170,67 +203,30 @@ export default {
     };
   },
   methods: {
-    prepare () {
-      this.seen = true;
-      let isValid = true;
-      this.passwordErr = false;
+    validateBeforeSubmit () {
       this.errorArray = [];
-      if (this.user.password !== this.confirmPass) {
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-        this.passwordErr = true;
-        this.errorArray.push('Passwords do not match, Please try again');
-        console.log(this.passwordErr);
-        console.log(this.user.password);
-        console.log(this.confirmPass);
-      }
-      if (!this.hasNumber(this.user.password)) {
-        this.passwordErr = true
-        this.errorArray.push('Password did not conform with policy: Password must have numeric character(s)')
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-      }
-      if (!this.hasUppercase(this.user.password)) {
-        this.passwordErr = true
-        this.errorArray.push('Password did not conform with policy: Password must have uppercase character(s)')
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-      }
-      if (this.user.password.length < 7) {
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-        this.passwordErr = true
-        this.errorArray.push('Password did not conform with policy: Password not long enough (min 8 characters)')
-      }
-      if (this.customAttr.tagline.length > 256) {
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-        this.passwordErr = true
-        this.errorArray.push('Tagline must be less than 256 characters')
-      }
-      if (this.customAttr.bio.length > 500) {
-        isValid = false;
-        this.seen = false;
-        window.scrollTo(0, 0);
-        this.passwordErr = true
-        this.errorArray.push('Bio must be less than 500 characters')
-      }
-      if (isValid) {
-        this.passwordErr = null;
-        Vue.set(this.user, 'custom:region', this.customAttr.region);
-        Vue.set(this.user, 'custom:skill-level', this.customAttr.skill);
-        Vue.set(this.user, 'custom:time-commitment', this.customAttr.timeCommitment);
-        Vue.set(this.user, 'custom:tagline', this.customAttr.tagline);
-        Vue.set(this.user, 'custom:bio', this.customAttr.bio);
-        // Vue.delete(this.$data, this.$data.region);
-        // this.$data.region = 'testing';
-        this.signup();
-      }
+      this.passwordErr = false;
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.prepare();
+        } else {
+          this.seen = false;
+          window.scrollTo(0, 0);
+          this.passwordErr = true;
+          this.errorArray.push('Please correct the highlighted fields!');
+        }
+      })
+    },
+    prepare () {
+      this.passwordErr = null;
+      Vue.set(this.user, 'custom:region', this.customAttr.region);
+      Vue.set(this.user, 'custom:skill-level', this.customAttr.skill);
+      Vue.set(this.user, 'custom:time-commitment', this.customAttr.timeCommitment);
+      Vue.set(this.user, 'custom:tagline', this.customAttr.tagline);
+      Vue.set(this.user, 'custom:bio', this.customAttr.bio);
+      // Vue.delete(this.$data, this.$data.region);
+      // this.$data.region = 'testing';
+      this.signup();
     },
     signup () {
       this.$cognitoAuth.signup(this.$data.user, (err, result) => {
@@ -334,5 +330,16 @@ export default {
   .errorLi {
     line-height: 1.2;
     margin-bottom: 10px;
+  }
+  .input-error {
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.23);
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.23);
+  }
+  .help-error {
+    font-size: .8em;
+    padding-left: 11px;
+    padding-right: 10px;
+    color: #bd0101;
   }
 </style>
