@@ -1,120 +1,24 @@
 <template>
   <div class="settings row">
     <div class="sidebar">
-      <div class="icon-container" v-on:click="seen = false; profile = true">
-        <img class="settings-icon" src="../assets/user.png"/><br/>
-        <span class="settings-label">Profile</span>
+      <div v-on:click="path = '/myaccount/profile'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/profile' }">
+        <router-link class="sidebar-link" to="/myaccount/profile">
+          <svg class="settings-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1523 1339q-22-155-87.5-257.5t-184.5-118.5q-67 74-159.5 115.5t-195.5 41.5-195.5-41.5-159.5-115.5q-119 16-184.5 118.5t-87.5 257.5q106 150 271 237.5t356 87.5 356-87.5 271-237.5zm-243-699q0-159-112.5-271.5t-271.5-112.5-271.5 112.5-112.5 271.5 112.5 271.5 271.5 112.5 271.5-112.5 112.5-271.5zm512 256q0 182-71 347.5t-190.5 286-285.5 191.5-349 71q-182 0-348-71t-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z"/></svg>
+          <p class="settings-label">Profile</p>
+        </router-link>
+      </div>
+      <div v-on:click="path = '/myaccount/groups'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/groups' }">
+        <router-link class="sidebar-link" to="/myaccount/groups">
+          <svg class="settings-icon" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M657 896q-162 5-265 128h-134q-82 0-138-40.5t-56-118.5q0-353 124-353 6 0 43.5 21t97.5 42.5 119 21.5q67 0 133-23-5 37-5 66 0 139 81 256zm1071 637q0 120-73 189.5t-194 69.5h-874q-121 0-194-69.5t-73-189.5q0-53 3.5-103.5t14-109 26.5-108.5 43-97.5 62-81 85.5-53.5 111.5-20q10 0 43 21.5t73 48 107 48 135 21.5 135-21.5 107-48 73-48 43-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-1024-1277q0 106-75 181t-181 75-181-75-75-181 75-181 181-75 181 75 75 181zm704 384q0 159-112.5 271.5t-271.5 112.5-271.5-112.5-112.5-271.5 112.5-271.5 271.5-112.5 271.5 112.5 112.5 271.5zm576 225q0 78-56 118.5t-138 40.5h-134q-103-123-265-128 81-117 81-256 0-29-5-66 66 23 133 23 59 0 119-21.5t97.5-42.5 43.5-21q124 0 124 353zm-128-609q0 106-75 181t-181 75-181-75-75-181 75-181 181-75 181 75 75 181z"/></svg>
+          <p class="settings-label">Groups</p>
+        </router-link>
       </div>
     </div>
-    <div class="main-content" v-if="seen">
-      <h2>Settings</h2>
-      <p>Select an option to the left to edit your settings</p>
-      <p>{{this.token}}</p>
-      <p>{{this.user}}</p>
-      <p>{{this.token['custom:region']}}</p>
+    <div class="instructions" v-if="path === '/myaccount'">
+      <h2>My Account</h2>
+      <p>Select an icon to the left to edit options for that category</p>
     </div>
-    <div class="profile-container" v-if="profile">
-      <h2>Settings - Edit Profile</h2>
-      <div class="instructions-container">
-        <ul class="instructions"><li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
-          <li>Enter your password at the end of the form to confirm changes</li>
-        </ul>
-      </div>
-      <form @submit.prevent="prepare">
-        <div class="form-group required">
-          <span class="form-label">Display Name</span><br/>
-          <label class="control-label"></label>
-          <input v-model="this.token.nickname" type="text" name="nickname" class="form-control" required>
-        </div>
-
-        <div class="form-group required">
-          <span class="form-label">Email</span><br/>
-          <label class="control-label"></label>
-          <input v-model="this.token.email" type="text" name="email" class="form-control" required>
-        </div>
-
-        <div class="form-group required">
-          <span class="form-label">Region</span><br/>
-          <label class="control-label"></label>
-          <select class="form-control" id="listRegion" required>
-            <option value="">Select a Region...</option>
-            <option>US - East</option>
-            <option>US - West</option>
-            <option>US - Central</option>
-            <option>EU - East</option>
-            <option>EU - West</option>
-            <option>EU - Central</option>
-            <option>Asia</option>
-            <option>Oceania</option>
-          </select>
-        </div>
-        <div class="form-group required">
-          <span class="form-label">Skill Level</span><br/>
-          <label class="control-label"></label>
-          <select class="form-control" id="listSkill" name="skill-level" required>
-            <option value="">Select a Skill Level...</option>
-            <option>Noob</option>
-            <option>Casual</option>
-            <option>Amateur</option>
-            <option>Average</option>
-            <option>Above Average</option>
-            <option>Semi - Pro</option>
-            <option>Pro</option>
-          </select>
-        </div>
-        <div class="form-group required">
-          <span class="form-label">Time Commitment</span><br/>
-          <label class="control-label"></label>
-          <select class="form-control" id="listTime" name="time-commitement" required>
-            <option value="">Select when you game the most...</option>
-            <option>Daily</option>
-            <option>Weekdays</option>
-            <option>Weekends</option>
-            <option>Weekly</option>
-            <option>Unsure</option>
-          </select>
-        </div>
-        <span class="form-label noPadding">Select your top 3 games</span><br/>
-        <div id="game1" class="form-group required">
-          <label class="control-label">1. </label>
-          <select class="form-control gameSelect" required>
-            <option value="">Select a Game...</option>
-            <option>Guild Wars 2</option>
-          </select>
-        </div>
-        <div class="form-group required" id="game2">
-          <label class="noAst">2. </label>
-          <select class="form-control gameSelect" disabled>
-            <option value="">Coming Soon...</option>
-            <option>Game 1</option>
-            <option>Game 2</option>
-            <option>Game 3</option>
-          </select>
-        </div>
-        <div class="form-group required" id="game3">
-          <label class="noAst">3. </label>
-          <select class="form-control gameSelect" disabled>
-            <option value="">Coming Soon...</option>
-            <option value="game1">Game 1</option>
-            <option value="game2">Game 2</option>
-            <option value="game3">Game 3</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <span class="form-label noPadding">Tagline (Limit: 256 Characters)</span><br/>
-          <input type="text" name="tagline" class="form-control optionalInput" />
-        </div>
-        <div class="form-group">
-          <span class="form-label noPadding">Bio (Limit: 500 Characters)</span><br/>
-          <textarea name="bio" class="form-control optionalInput" />
-        </div>
-        <div class="btnContainer">
-          <button class="btn btn-info">Sign Up</button>
-          <button class="btn btn-light">Cancel</button>
-        </div>
-      </form>
-    </div>
-
+    <router-view></router-view>
   </div>
 </template>
 
@@ -122,6 +26,9 @@
 import Vue from 'vue';
 import jwtDecode from 'jwt-decode';
 
+if (this.route === '/settings/account') {
+  alert('success');
+}
 export default {
   name: 'Signup',
   metaInfo: {
@@ -136,7 +43,8 @@ export default {
     return {
       loggedIn: false,
       seen: true,
-      profile: false
+      profile: false,
+      path: this.$route.path
     }
   },
   methods: {
@@ -183,7 +91,6 @@ export default {
     padding: 25px 0;
   }
   .icon-container {
-    padding: 10px 20px 10px 18px;
   }
   .icon-container:hover {
     background: #385271;
@@ -191,80 +98,43 @@ export default {
   }
   .settings-icon {
     height: 2.7em;
+    fill: #f3f3f3;
   }
   .settings-label {
     font-size: .8em;
+    margin: 0;
+    margin-top: -5px;
   }
   .main-content, .profile-container {
     margin: 35px;
   }
-
-
-
-  .sign-up {
-    margin-top: 35px;
-    max-width: 70vh;
-    margin-bottom: 35px;
-  }
-  .form-group.required .control-label:before {
-    content:"* ";
-    color:red;
-  }
-  .form-control {
-    width: 95%;
-    display: inline;
-  }
-  .form-col {
-    flex: initial;
-    max-width: initial;
-  }
-  .inputs {
-    max-width: 300px;
-  }
-  .instructions {
-    padding-left: 25px;
-  }
-  .instructions>li {
-    margin-bottom: 10px;
-  }
-  .instructions-container {
-    padding: 12px 20px;
-    background: #e9ecef;
-    margin-bottom: 25px;
-    border-radius: 0.25rem;
-    max-width: 300px;
-  }
-  .gameSelect {
-    max-width: calc(95% - 17px);
-  }
-  .optionalInput {
-    width: calc(95% + 11px);
-  }
-  .noAst {
-    padding-left: 11px;
-  }
-  .btnContainer {
-    text-align: center;
-  }
-  .btn-light {
-    background: #a3a1a1;
+  .sidebar-link {
     color: white;
+    padding: 10px 20px 10px 18px;
+    display: inline-block;
   }
-  .btn-light:hover {
-    background: #b9b9b9;
+  .sidebar-link:hover {
+    text-decoration: none;
   }
-  .red {
-    color: red;
+  .isActive {
+    background: white;
   }
-  .form-label {
-    padding-left: 11px;
-    font-weight: bold;
-    font-size: .9em;
+  .isActive > a > p {
+    color: #3f5e86;
   }
-  .noPadding {
-    padding: 0;
+  .isActive > a > svg {
+    fill: #3f5e86
   }
-  .errorList {
-    padding-left: 25px;
+  .isActive:hover {
+    background: white;
+  }
+  /*.isActive:hover > a > svg {
+    fill: #013373;
+  }
+  .isActive:hover > a > p {
+    color: #013373;
+  }*/
+  .instructions {
+    margin: 35px;
   }
 </style>
