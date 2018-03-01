@@ -7,6 +7,8 @@ import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
 import Settings from '@/components/Settings';
+import settingsAccount from '@/components/Settings-Account';
+import settingsGroups from '@/components/Settings-Groups';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
@@ -24,8 +26,19 @@ export default new Router({
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
     { path: '/dashboard', component: LoggedIn },
-    { path: '/settings', component: Settings },
-    { path: '/confirm_reset_password', component: NotFound }, // Change me
+    { path: '/myaccount',
+      component: Settings,
+      children: [
+        {
+          path: 'profile',
+          component: settingsAccount
+        },
+        {
+          path: 'groups',
+          component: settingsGroups
+        }]
+    },
+    { path: '/reset_password', component: NotFound }, // Change me
     { path: '/reset_password', component: ResetPassword }, // Change me
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
