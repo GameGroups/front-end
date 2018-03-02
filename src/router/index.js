@@ -6,6 +6,7 @@ import Signup from '@/components/Signup';
 import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
+import CreateGroup from '@/components/CreateGroup';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -22,6 +23,7 @@ export default new Router({
     { path: '/dashboard', component: LoggedIn },
     { path: '/reset_password', component: NotFound }, // Change me
     { path: '/confirm_reset_password', component: NotFound }, // Change me
+    { path: '/create_group', component: CreateGroup },
     {
       // 404 for all routes that don't match
       path: '*',
