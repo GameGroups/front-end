@@ -3,7 +3,7 @@
   <div class="background">
   <div class="login row">
     <div class="col-sm-3 col-sm-offset-3 login-container">
-      <h2>Log In</h2>
+      <h2>Login</h2>
 
       <p v-if="$route.query.redirect">
         Log in to your account.
@@ -133,6 +133,9 @@ export default {
   @media only screen and (max-width: 768px)  {
     .background {
       background: none;
+    }
+    .login-container {
+      background: #ececec;
     }
   }
 
