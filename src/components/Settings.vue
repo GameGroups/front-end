@@ -137,4 +137,13 @@ export default {
   .instructions {
     margin: 35px;
   }
+
+  @media only screen and (max-width: 440px)  {
+    .settings-icon {
+      height: 1.7em;
+    }
+    .sidebar-link {
+      padding: 10px 10px 10px 8px;
+    }
+  }
 </style>
