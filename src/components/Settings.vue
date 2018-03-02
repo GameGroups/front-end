@@ -1,6 +1,12 @@
 <template>
   <div class="settings row">
     <div class="sidebar">
+      <div v-on:click="path = '/myaccount/details'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/details' }">
+        <router-link class="sidebar-link" to="/myaccount/details">
+          <svg class="settings-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 1376v-160q0-14-9-23t-23-9h-96v-512q0-14-9-23t-23-9h-320q-14 0-23 9t-9 23v160q0 14 9 23t23 9h96v320h-96q-14 0-23 9t-9 23v160q0 14 9 23t23 9h448q14 0 23-9t9-23zm-128-896v-160q0-14-9-23t-23-9h-192q-14 0-23 9t-9 23v160q0 14 9 23t23 9h192q14 0 23-9t9-23zm640 416q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>
+          <p class="settings-label">Details</p>
+        </router-link>
+      </div>
       <div v-on:click="path = '/myaccount/profile'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/profile' }">
         <router-link class="sidebar-link" to="/myaccount/profile">
           <svg class="settings-icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1523 1339q-22-155-87.5-257.5t-184.5-118.5q-67 74-159.5 115.5t-195.5 41.5-195.5-41.5-159.5-115.5q-119 16-184.5 118.5t-87.5 257.5q106 150 271 237.5t356 87.5 356-87.5 271-237.5zm-243-699q0-159-112.5-271.5t-271.5-112.5-271.5 112.5-112.5 271.5 112.5 271.5 271.5 112.5 271.5-112.5 112.5-271.5zm512 256q0 182-71 347.5t-190.5 286-285.5 191.5-349 71q-182 0-348-71t-286-191-191-286-71-348 71-348 191-286 286-191 348-71 348 71 286 191 191 286 71 348z"/></svg>
@@ -68,9 +74,7 @@ export default {
           console.log("Dashboard: Couldn't get the session:", err, err.stack);
           return;
         }
-
         this.token = jwtDecode(jwtToken);
-        console.log(this.token);
       });
     } else {
       this.$router.replace(this.$route.query.redirect || '/login');

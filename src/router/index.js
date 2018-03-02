@@ -9,6 +9,7 @@ import NotFound from '@/components/NotFound';
 import Settings from '@/components/Settings';
 import settingsAccount from '@/components/Settings-Account';
 import settingsGroups from '@/components/Settings-Groups';
+import settingsDetails from '@/components/Settings-Details';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
@@ -36,10 +37,13 @@ export default new Router({
         {
           path: 'groups',
           component: settingsGroups
+        },
+        {
+          path: 'details',
+          component: settingsDetails
         }]
     },
     { path: '/reset_password', component: NotFound }, // Change me
-    { path: '/reset_password', component: ResetPassword }, // Change me
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
     {
