@@ -29,6 +29,7 @@
     "jwt-decode": "^2.2.0",
     "popper.js": "^1.12.9",
     "uglify-es": "github:mishoo/UglifyJS2#harmony",
+    "vee-validate": "^2.0.4",
     "vue": "^2.5.2",
     "vue-meta": "^1.4.2",
     "vue-router": "^3.0.1",
