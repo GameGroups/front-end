@@ -1,6 +1,8 @@
 <template>
+
+  <div class="background">
   <div class="login row">
-    <div class="col-sm-3 col-sm-offset-3">
+    <div class="col-sm-3 col-sm-offset-3 login-container">
       <h2>Log In</h2>
 
       <p v-if="$route.query.redirect">
@@ -18,7 +20,9 @@
         <div class="form-group">
           <input id="inputPassword" type="password" class="form-control" placeholder="Enter your password" v-model="pass" required>
         </div>
-        <button class="btn btn-primary">Login</button>
+        <div class="login-div">
+          <button class="btn btn-primary">Login</button>
+        </div>
       </form>
 
       <div class="marketing">
@@ -27,6 +31,7 @@
         </p>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -55,7 +60,11 @@ export default {
     login () {
       this.$cognitoAuth.signin(this.username, this.pass, (err, result) => {
         if (err) {
+          console.log(err.code)
           this.error = err;
+          if (err.code === 'UserNotFoundException') {
+            this.error.message = 'Incorrect username or password.'
+          }
         } else {
           store.dispatch('login');
           this.$router.replace(this.$route.query.redirect || '/dashboard');
@@ -83,12 +92,54 @@ export default {
   .login {
     padding-top: 2rem;
   }
-
   p.error {
     margin: 0;
   }
-
   .marketing {
     margin-top: 1.5rem;
+  }
+  .login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20em;
+    background: #ececece0;
+    padding: 25px;
+    border-radius: 5px;
+    max-width: initial;
+    flex: initial;
+  }
+  .login-div {
+    text-align: center;
+  }
+  h2 {
+    margin-bottom: 15px;
+  }
+  .btn {
+    width: 100%;
+  }
+  .background {
+    background: url('../assets/gw2-background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  @media only screen and (max-width: 768px)  {
+    .background {
+      background: none;
+    }
+  }
+
+  @media only screen and (max-width: 378px)  {
+    .login-container {
+      background: none;
+      padding: 15px;
+    }
   }
 </style>
