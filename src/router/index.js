@@ -9,6 +9,7 @@ import NotFound from '@/components/NotFound';
 import Settings from '@/components/Settings';
 import settingsAccount from '@/components/Settings-Account';
 import settingsGroups from '@/components/Settings-Groups';
+import settingsDetails from '@/components/Settings-Details';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -33,6 +34,10 @@ export default new Router({
         {
           path: 'groups',
           component: settingsGroups
+        },
+        {
+          path: 'details',
+          component: settingsDetails
         }]
     },
     { path: '/reset_password', component: NotFound }, // Change me
