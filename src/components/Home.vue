@@ -8,9 +8,9 @@
           <router-link to="/signup"><button id="btnGroup" class="btn btn-primary">Create a Group Today</button></router-link>
           <svg id="pointRight" class="hideOnMobile" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 52 52" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 52 52" v-html="pointRightHTML"></svg>
         </div>
-        <div class="groupFlexBox hideOnMobile col-md-6">
-          <svg class="hideOnMobile" width="100" height="100"><rect x="0" y="0" width="100%" height="100%" style="fill:#F8F8F8" /><rect x="10" y="10" width="5rem" height="5rem" style="fill:#7F7E7E" /></svg>
-          <div class="hideOnMobile bgLightGrey">
+        <div class="bgLightGrey groupFlexBox hideOnMobile col-md-6">
+          <svg class="hideOnMobile" width="100" height="100"><rect x="10" y="10" width="5rem" height="5rem" style="fill:#7F7E7E" /></svg>
+          <div class="hideOnMobile" style="padding: .5rem 1rem 0 1rem">
             <span class="hideOnMobile font darkGreyFont bold">Your Group Here!</span>
             <br/>
             <span class="hideOnMobile font greyFont">We play games seriously blah blah...</span>
@@ -25,23 +25,25 @@
         </div>
       </div>
       <div class="bgLightGrey">
-        <div class="groupSection">
-          <p class="font medium darkGreyFont"><strong>Find Goups Based on...</strong></p>
-          <div class="row">
-            <div class="col-md-4">
-              <p class="font text-center small darkGreyFont bold">Skill Level</p>
-              <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 460.731 460.731" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 460.731 460.731" v-html="skillLevelHTML"></svg>
-              <p class="font text-center middleSectionText">Find brand new to seasoned professionals</p>
-            </div>
-            <div class="col-md-4">
-              <p class="font text-center small darkGreyFont bold">Availability</p>
-              <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 512 512" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 512 512" v-html="availabilityHTML"></svg>
-              <p class="font text-center middleSectionText">Daily, weekly, or occasionally, find the availability that works for you</p>
-            </div>
-            <div class="col-md-4">
-              <p class="font text-center small darkGreyFont bold">Region</p>
-              <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 1000 1000" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 1000 1000" v-html="regionHTML"></svg>
-              <p class="font text-center middleSectionText">Various regions to help fine tune groups for lower latency</p>
+        <div class="row">
+          <div class="groupSection">
+            <p class="font medium darkGreyFont"><strong>Find Goups Based on...</strong></p>
+            <div class="row">
+              <div class="col-md-4">
+                <p class="font text-center small darkGreyFont bold">Skill Level</p>
+                <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 460.731 460.731" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 460.731 460.731" v-html="skillLevelHTML"></svg>
+                <p class="font text-center middleSectionText">Find brand new to seasoned professionals</p>
+              </div>
+              <div class="col-md-4">
+                <p class="font text-center small darkGreyFont bold">Availability</p>
+                <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 512 512" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 512 512" v-html="availabilityHTML"></svg>
+                <p class="font text-center middleSectionText">Daily, weekly, or occasionally, find the availability that works for you</p>
+              </div>
+              <div class="col-md-4">
+                <p class="font text-center small darkGreyFont bold">Region</p>
+                <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 1000 1000" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 1000 1000" v-html="regionHTML"></svg>
+                <p class="font text-center middleSectionText">Various regions to help fine tune groups for lower latency</p>
+              </div>
             </div>
           </div>
         </div>
@@ -125,7 +127,8 @@ export default {
     background-color: #CFCCCB
   }
   .bgLightGrey {
-    background-color: #F8F8F8
+    background-color: #F8F8F8;
+    margin: 3rem 0 3rem 0
   }
   .centerSVG
   {
@@ -155,7 +158,7 @@ export default {
   .groupFlexBox {
     display: flex;
     justify-content: flex-end;
-    align-self: right;
+    align-self: center;
   }
   #exampleGroupMedalTextSkill {
     color: red;
@@ -173,12 +176,12 @@ export default {
   }
     @media screen and (min-width: 0px) and (max-width: 1076px) {
     .groupFlexBox {
-      margin-top: 7.5rem;
+      // margin-top: 7.5rem;
     }
   }
     @media screen and (min-width: 1077px) {
     .groupFlexBox {
-      margin-top: 5.25rem;
+      // margin-top: 5.25rem;
     }
   }
 </style>
