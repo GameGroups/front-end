@@ -111,6 +111,7 @@
 
 import Vue from 'vue';
 import Axios from 'axios';
+import store from '../store';
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate);
 
@@ -163,23 +164,35 @@ export default {
       this.createGroup();
     },
     createGroup () {
-      // Test URL
-      // Axios.post('http://httpbin.org/post', { 
-      Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', {
-        // use the line below when the post request accepts the additional data
-        // body: this.group
-        body: this.postBody
-      })
-        .then(response => {
-          console.log('Signup successful:', response);
-          this.$router.replace({ path: '/group', query: { groupName: this.groupName } }); // route to group profile page
-        })
-        .catch(e => {
-          this.seen = false;
-          window.scrollTo(0, 0);
-          this.error = e;
-          console.error(e);
-        });
+      // store.state.loggedIn
+      alert(store.state.loggedIn);
+      // alert(this.$cognitoAuth.)
+      this.$cognitoAuth.getIdToken((err, loggedIn) => {
+        if (err) {
+
+        } else {
+          // Test URL
+          // Axios.post('http://httpbin.org/post', { 
+          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', {
+          // use the line below when the post request accepts the additional data
+          // body: this.group
+            body: this.postBody,
+            Headers: {
+              'x-amz-security-token': loggedIn
+            }
+          })
+            .then(response => {
+              console.log('Signup successful:', response);
+              this.$router.replace({ path: '/group', query: { groupName: this.groupName } }); // route to group profile page
+            })
+            .catch(e => {
+              this.seen = false;
+              window.scrollTo(0, 0);
+              this.error = e;
+              console.error(e);
+            });
+        }
+      });
     },
     Cancel () {
       if (confirm('Are you sure?')) { this.$router.replace({ path: '/dashboard' }) }; // route to dashboard !!!STOP THE VALIDATE AND SUBMIT FROM HAPPENING!!!
