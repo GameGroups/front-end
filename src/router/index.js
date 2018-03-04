@@ -6,6 +6,8 @@ import Signup from '@/components/Signup';
 import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
+import ResetPassword from '@/components/ResetPassword';
+import ConfirmReset from '@/components/ResetPassword-VeriCode_NewPass';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -20,8 +22,8 @@ export default new Router({
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
     { path: '/dashboard', component: LoggedIn },
-    { path: '/reset_password', component: NotFound }, // Change me
-    { path: '/confirm_reset_password', component: NotFound }, // Change me
+    { path: '/reset_password', component: ResetPassword }, // Change me
+    { path: '/confirm_reset_password', component: ConfirmReset }, // Change me
     {
       // 404 for all routes that don't match
       path: '*',
