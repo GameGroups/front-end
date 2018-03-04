@@ -1,6 +1,6 @@
 <template>
   <div class="home row">
-    <div class="col-md-12 pageContent">
+    <div class="col-md-12">
       <div class="topSection">
         <div class="row">
           <div class="col-md-6">
