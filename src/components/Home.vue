@@ -51,7 +51,7 @@
       <div class="gameSection">
         <p class="font small darkGreyFont"><strong class="medium" style="display: block;">Current Games Available</strong> New games added constantly
         <div class="col-md-2 col-small-4">
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 400 280" xml:space="preserve" x="0px" y="0px" viewBox="0 0 400 280" width="12rem" v-html="guildWars2HTML"></svg>
+          <svg class="gw2SVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 400 280" xml:space="preserve" x="0px" y="0px" viewBox="0 0 400 280" v-html="guildWars2HTML"></svg>
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/scss">
   .home > div:first-child {
-    margin: 35px 0;
+    margin: 55px 0;
   }
   .font {
     font-family: Oswald, Arial, Helvetica, sans-serif;
@@ -130,7 +130,7 @@ export default {
     background-color: #D9D9D9
   }
   .bgLightGrey {
-    background-color: #F9F9F9;
+    background-color: #d8d9d9;
   }
   .centerSVG
   {
@@ -151,10 +151,14 @@ export default {
     padding-left: 2rem;
   }
   .padding-Left-3rem {
-    padding-left: 3rem;
+    padding-left: 3.8rem;
   }
   .groupSection {
-    margin: 3rem 0 3rem 0;
+    margin: 3rem 0;
+    padding: 3rem 0;
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow: hidden;
   }
   .gameSection{
     margin-left: 2rem;
@@ -173,5 +177,8 @@ export default {
   #pointRight {
     margin-bottom: -.25rem;
     margin-left: 2rem;
+  }
+  .gw2SVG {
+    height: 6em;
   }
 </style>
