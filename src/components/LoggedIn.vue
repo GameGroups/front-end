@@ -11,12 +11,12 @@
         <p v-if="groups.length == 0">You haven't joined any groups. Click the groups link at the top to get started!</p>
         <router-link class="r-link" to="#">
           <div class="groupCard" v-for="group in groups">
-            <div class="groupName">
+            <div class="groupName ">
               <b>{{group.groupName}}</b>
             </div>
-            <div>
-              <div>
-                <img class="groupImg" src="http://via.placeholder.com/150x100"/>
+            <div class="imgContainer">
+              <div style="height: 100%">
+                <img class="groupImg" src="http://via.placeholder.com/150x150"/>
               </div>
             </div>
           </div>
@@ -121,24 +121,31 @@ export default {
     background: #e0dfdf;
     border-radius: 8px;
     width: 12em;
-    height: 12em;
+    height: 14em;
     justify-content: center;
     text-align: center;
     overflow: hidden;
     border: 1px solid black;
   }
   .groupName {
-    height: 33%;
+    height: 3.8em;
     padding: .5em;
     background: black;
-    color: #f7c82e
+    color: #f7c82e;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
   .groupImg {
-    max-width: 150px;
-    max-height: 100px;
+    height: 100%;
+    width: 100%;
   }
   .r-link {
     display: flex;
     text-decoration: none;
+  }
+  .imgContainer {
+    height: calc(100% - 3.8em);
   }
 </style>
