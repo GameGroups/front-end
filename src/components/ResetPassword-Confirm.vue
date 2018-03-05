@@ -18,6 +18,7 @@
           </div>
 
           <div class="form-group required password-group">
+            <p>Enter a new password. Your password must be a minimum 8 characters and contain: 1 uppercase letter, 1 number</p>
             <span class="form-label noPadding">New Password</span><br/>
             <input v-model="password" v-validate="'required|verify_password|min:8|confirmed:Confirm Password'" type="password" name="New password" :class="{'form-control': true, 'input-error': errors.has('New password') }" required>
             <i v-show="errors.has('New password')"></i>
@@ -117,7 +118,7 @@ export default {
     max-width: 22em;
   }
   .instructions-p {
-    margin-bottom: 2.7em;
+    margin-top: 2em;
   }
   .form-label {
     padding-left: 11px;
@@ -128,9 +129,21 @@ export default {
     padding: 0;
   }
   .password-group {
-    margin-top: 2.5em;
+    margin-top: 3.5em;
   }
   .alert-danger {
     display: inline-block;
+  }
+
+  @media only screen and (max-width: 440px)  {
+    .reset {
+      margin: 1em 0;
+    }
+    h2 {
+      font-size: 1.8rem;
+    }
+    .btnContainer {
+      text-align: center;
+    }
   }
 </style>
