@@ -18,6 +18,7 @@
       </div>
 
       <div class="secondary-info">
+        <p class="top-games-title">Top 3 Games:</p>
         <div class="top-games">
           <ol>
             <li>Game 1</li>
@@ -93,6 +94,11 @@ export default {
       border-left: 5px solid rgba(6, 6, 6, 1);
     }
 
+    .top-games-title {
+      text-align: right;
+      padding-right: 1rem;
+    }
+
     .top-games {
       display: flex;
       justify-content: flex-end;
@@ -100,4 +106,19 @@ export default {
     }
   }
 
+  .interaction-bar {
+    height: 1.75rem;
+    background: #666;
+  }
+
+  .profile-bio {
+    .bio {
+      padding-top: 1rem;
+    }
+  }
+
+  .groups-sidebar {
+    background: red;
+    height: 50vh;
+  }
 </style>
