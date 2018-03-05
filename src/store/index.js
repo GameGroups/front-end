@@ -16,6 +16,7 @@ const mutations = {
   },
   SET_FALSE (state) {
     state.loggedIn = false;
+    this.replaceState({}); // Clear old state for new user
   },
   GET_USER (state) {
     cognitoAuth.getIdToken((err, jwtToken) => {

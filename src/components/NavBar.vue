@@ -53,9 +53,11 @@ export default {
   },
   methods: {},
   mounted: function () {
-    store.dispatch('getUser');
-    console.log(store.state.currentUser);
-    // console.log(store.currentUser);
+    if (store.state.loggedIn) {
+      store.dispatch('getUser');
+      console.log(store.state.currentUser);
+      // console.log(store.currentUser);
+    }
   }
 }
 </script>
