@@ -27,7 +27,7 @@ export default new Router({
     { path: '/reset_password', component: ResetPassword }, // Change me
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
-    { path: '/profile', component: Profile },
+    { path: '/user', component: Profile },
     {
       // 404 for all routes that don't match
       path: '*',
