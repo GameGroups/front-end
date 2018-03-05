@@ -1,29 +1,36 @@
 <template>
   <div class="logged-in row" v-if="$store.state.loggedIn">
     <div class="col-md-12">
-      <h3>Your Games:</h3>
+      <h2>Your Games:</h2>
       <div v-for="game in games">
         <img class="gameLogo" :src="game.logo"/>
       </div>
       <div class="hr"></div>
-      <h3>Your Groups:</h3>
+      <h2>Your Groups:</h2>
       <div class="groupsContainer">
-        <div class="groupCard" v-for="group in groups">
-          <div >
-            <b>{{group.groupName}}</b>
+        <p v-if="groups.length == 0">You haven't joined any groups. Click the groups link at the top to get started!</p>
+        <router-link class="r-link" to="#">
+          <div class="groupCard" v-for="group in groups">
+            <div class="groupName">
+              <b>{{group.groupName}}</b>
+            </div>
+            <div>
+              <div>
+                <img class="groupImg" src="http://via.placeholder.com/150x100"/>
+              </div>
+            </div>
           </div>
-          <div>Members: {{group.numMembers}}<br/>
-            {{group.region}}
-          </div>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import store from '../store';
 import jwtDecode from 'jwt-decode';
+import Axios from 'axios';
+import store from '../store';
+import cognitoUser from 'amazon-cognito-identity-js'
 
 export default {
   name: 'LoggedIn',
@@ -37,7 +44,13 @@ export default {
   },
   data: function () {
     return {
-      loggedIn: false
+      loggedIn: false,
+      games: [{
+        gameID: 1,
+        game: 'Guild Wars 2',
+        logo: require('../assets/GW2_Logo.png')
+      }],
+      groups: []
     }
   },
   methods: {
@@ -59,7 +72,26 @@ export default {
     });
   },
   beforeMount () {
-    if (!store.state.loggedIn) {
+    if (this.loggedIn) {
+      this.$cognitoAuth.getIdToken((err, jwtToken) => {
+        if (err) {
+          console.log("Dashboard: Couldn't get the session:", err, err.stack);
+          return;
+        }
+        this.token = jwtDecode(jwtToken);
+        this.user = this.$cognitoAuth.getCurrentUser();
+        var config = {
+          headers: { 'Authorization': jwtToken }
+        };
+        Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + this.token.sub, config)
+          .then(response => {
+            this.groups = response.data
+          })
+          .catch(e => {
+            console.log(e)
+          })
+      });
+    } else {
       this.$router.replace(this.$route.query.redirect || '/login');
     }
   }
@@ -72,7 +104,7 @@ export default {
     padding-top: 2rem;
   }
   .gameLogo {
-    height: 4.5em;
+    height: 5.5em;
   }
   .hr {
     margin: 15px 0;
@@ -83,17 +115,30 @@ export default {
     display: flex;
   }
   .groupCard {
-    flex-wrap: wrap;
     align-items: center;
     margin: 10px 5px;
     font-size: .8em;
     background: #e0dfdf;
-    // padding: 10px;
     border-radius: 8px;
-    width: 120px;
-    min-height: 120px;
+    width: 12em;
+    height: 12em;
     justify-content: center;
     text-align: center;
     overflow: hidden;
+    border: 1px solid black;
+  }
+  .groupName {
+    height: 33%;
+    padding: .5em;
+    background: black;
+    color: #f7c82e
+  }
+  .groupImg {
+    max-width: 150px;
+    max-height: 100px;
+  }
+  .r-link {
+    display: flex;
+    text-decoration: none;
   }
 </style>
