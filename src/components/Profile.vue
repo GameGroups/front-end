@@ -35,7 +35,27 @@
       <p class="bio">{{ $store.state.currentUser['custom:bio'] ? $store.state.currentUser['custom:bio'] : 'No bio has been set.' }}</p>
     </div>
 
-    <div class="groups-sidebar col-md-3"></div>
+    <div class="groups-sidebar col-md-3">
+      <h5>Groups:</h5>
+
+      <ul class="groups-list">
+        <li v-for="(group, index) in groups" :key="`group-${index}`">
+          <img class="img-fluid" src="http://via.placeholder.com/50x50" />
+          <div>
+            <h4>{{ group.groupName }}</h4>
+            <h6 class="text-muted">{{ group.memberCount }} Members</h6>
+          </div>
+        </li>
+
+        <!--<li>
+          <img class="img-fluid" src="http://via.placeholder.com/50x50" />
+          <div>
+            <h4>GroupName</h4>
+            <h6 class="text-muted">1024 Members</h6>
+          </div>
+        </li>-->
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -52,7 +72,22 @@ export default {
       amp: undefined
     }
   },
-  data: function () { return {}; },
+  data: function () {
+    return {
+      groups: [
+        { groupName: 'Group 1', memberCount: '1000' },
+        { groupName: 'Group 2', memberCount: '6573' },
+        { groupName: 'Group 3', memberCount: '1000000' },
+        { groupName: 'Group 4', memberCount: '1000000' },
+        { groupName: 'Group 5', memberCount: '1024' },
+        { groupName: 'Group 6', memberCount: '1024' },
+        { groupName: 'Group 7', memberCount: '1024' },
+        { groupName: 'Group 8', memberCount: '1024' },
+        { groupName: 'Group 9', memberCount: '1024' },
+        { groupName: 'Group 10', memberCount: '1024' }
+      ]
+    };
+  },
   beforeCreate: function () {
     // Make API call to get appropriate user for a username
   }
@@ -110,15 +145,35 @@ export default {
     background: #666;
   }
 
-  .profile-bio {
+  .bio {
+    margin-top: 1rem;
+  }
+
+  .profile-bio, .groups-sidebar {
     h5 {
-      margin: .5rem 0 .25rem 0;
+      margin: .5rem 0 0 0;
+      font-weight: bold;
     }
   }
 
   .groups-sidebar {
-    background: red;
-    height: 50vh;
+    //background: red;
+    height: 60vh;
+    overflow-y: scroll;
+
+    .groups-list {
+      padding: 1rem 0 0 0;
+
+      li {
+        display: flex;
+        height: 50px;
+        margin-bottom: 1rem;
+
+        img {
+          padding-right: .5rem;
+        }
+      }
+    }
   }
 
   @media (max-width: 767px) {
