@@ -2,7 +2,7 @@
   <div class="profile row">
     <div class="profile-header col-md-12">
       <div class="profile-picture">
-        <img src="http://via.placeholder.com/150x150" />
+        <img class="img-fluid" src="http://via.placeholder.com/150x150" />
       </div>
 
       <div class="primary-info">
@@ -31,6 +31,7 @@
     <div class="interaction-bar col-md-12"></div>
 
     <div class="profile-bio col-md-9">
+      <h5>Bio:</h5>
       <p class="bio">{{ $store.state.currentUser['custom:bio'] ? $store.state.currentUser['custom:bio'] : 'No bio has been set.' }}</p>
     </div>
 
@@ -62,8 +63,9 @@ export default {
 
   .profile-header {
     display: flex;
-    padding: 1rem 0 1rem 0;
+    padding: 2.5rem 0 2.5rem 0;
     background: orange;
+    overflow: hidden;
 
     .primary-info { width: 75%; }
     .secondary-info { width: 25%; }
@@ -109,13 +111,38 @@ export default {
   }
 
   .profile-bio {
-    .bio {
-      padding-top: 1rem;
+    h5 {
+      margin: .5rem 0 .25rem 0;
     }
   }
 
   .groups-sidebar {
     background: red;
     height: 50vh;
+  }
+
+  @media (max-width: 767px) {
+    .profile-header {
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem 0 1rem 0;
+    }
+
+    .primary-info {
+      width: auto !important;
+      display: flex;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .tagline {
+      border-left: 0 !important;
+    }
+
+    .profile-picture {
+      display: flex;
+      justify-content: center;
+      margin: .75rem 0 .75rem 0 !important;
+    }
   }
 </style>
