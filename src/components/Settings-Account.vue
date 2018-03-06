@@ -83,35 +83,6 @@
           <p v-show="errors.has('Time Commitment')" class="help-error">{{ errors.first('Time Commitment') }}</p>
         </div>
 
-        <span class="form-label">Select your top 3 games</span><br/>
-        <div id="game1" class="form-group required">
-          <label class="control-label">1. </label>
-          <select v-validate="'required'" :class="{'form-control': true, 'gameSelect': true, 'input-error': errors.has('Game 1')}" v-model="user.game" name="Game 1" required>
-            <option value="">Select a Game...</option>
-            <option>Guild Wars 2</option>
-          </select>
-          <i v-show="errors.has('Game 1')"></i>
-          <p v-show="errors.has('Game 1')" class="game-error help-error">{{ errors.first('Game 1') }}</p>
-        </div>
-        <div class="form-group required" id="game2">
-          <label class="noAst">2. </label>
-          <select class="form-control gameSelect" disabled>
-            <option value="">Coming Soon...</option>
-            <option>Game 1</option>
-            <option>Game 2</option>
-            <option>Game 3</option>
-          </select>
-        </div>
-        <div class="form-group required" id="game3">
-          <label class="noAst">3. </label>
-          <select class="form-control gameSelect" disabled>
-            <option value="">Coming Soon...</option>
-            <option value="game1">Game 1</option>
-            <option value="game2">Game 2</option>
-            <option value="game3">Game 3</option>
-          </select>
-        </div>
-
         <div class="form-group noAst">
           <span class="form-label noPadding">Tagline (Limit: 256 Characters)</span><br/>
           <textarea v-validate="'max:256'" :class="{'optionalInput': true, 'form-control': true, 'input-error': errors.has('Tagline') }" v-model="user.tagline" name="Tagline"/>
@@ -144,7 +115,7 @@ import jwtDecode from 'jwt-decode';
 import { AWSCognito } from 'aws-sdk'
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import VeeValidate from 'vee-validate';
-import config from 'config/dev.env'
+import config from '../../config/dev.env'
 Vue.use(VeeValidate);
 
 export default {
