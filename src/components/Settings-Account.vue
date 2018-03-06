@@ -144,6 +144,7 @@ import jwtDecode from 'jwt-decode';
 import { AWSCognito } from 'aws-sdk'
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import VeeValidate from 'vee-validate';
+import config from 'config/dev.env'
 Vue.use(VeeValidate);
 
 export default {
@@ -218,8 +219,8 @@ export default {
       };
       this.user.password = '';
       const authenticationDetails = new AuthenticationDetails(authenticationData);
-      const poolData = { UserPoolId: 'us-east-2_aRo6Xa58p',
-        ClientId: '6r5l1vmua09uqgp11i5gs880je'
+      const poolData = { UserPoolId: config.COGNITO_IDENTITY_POOL_ID,
+        ClientId: config.COGNITO_CLIENT_ID
       };
       const userPool = new CognitoUserPool(poolData);
       const userData = {
