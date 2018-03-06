@@ -20,7 +20,7 @@ export default {
       amp: undefined // "amp" has no value
     }
   },
-  data () {
+  data: function () {
     return {
       msg: '404 - Page not found!'
     };

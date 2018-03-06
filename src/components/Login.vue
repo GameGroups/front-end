@@ -44,7 +44,7 @@ export default {
       amp: undefined
     }
   },
-  data () {
+  data: function () {
     return {
       username: '',
       pass: '',
