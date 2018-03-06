@@ -11,11 +11,11 @@
           <li class="errorLi error" v-if="error">{{ error.message }}</li>
         </ul>
       </div>
-      <form @submit.prevent="validateBeforeSubmit">
+      <form>
        <div class="form-group required">
          <span class="form-label">Group Name</span><br/>
           <label class="control-label"></label>
-          <input v-validate="'required|alpha_dash'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
+          <input v-validate="'required|alpha_num|alpha_spaces'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
           <i v-show="errors.has('Group Name')"></i>
           <p v-show="errors.has('Group Name')" class="help-error">{{ errors.first('Group Name') }}</p>
         </div>
@@ -99,8 +99,8 @@
           <p v-show="errors.has('Bio')" class="help-error">{{ errors.first('Bio') }}</p>
         </div>
         <div class="btnContainer">
-            <button class="btn btn-primary">Create Group</button>
-            <button class="btn btn-light" @click="Cancel">Cancel</button>
+            <button class="btn btn-primary" v-on:click.prevent="clickHandeler">Create Group</button>
+            <button class="btn btn-light" v-on:click.prevent="clickHandeler">Cancel</button>
         </div>
       </form>
     </div>
@@ -164,26 +164,19 @@ export default {
       this.createGroup();
     },
     createGroup () {
-      // store.state.loggedIn
-      alert(store.state.loggedIn);
-      // alert(this.$cognitoAuth.)
-      this.$cognitoAuth.getIdToken((err, loggedIn) => {
+      if (!store.state.loggedIn) { this.$router.replace({ path: '/login' }) }; // not logged. Send them to the login page
+      this.$cognitoAuth.getIdToken((err, token) => {
         if (err) {
-
+          console.log(err);
         } else {
-          // Test URL
-          // Axios.post('http://httpbin.org/post', { 
-          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', {
-          // use the line below when the post request accepts the additional data
-          // body: this.group
-            body: this.postBody,
-            Headers: {
-              'x-amz-security-token': loggedIn
+          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.postBody, {
+            headers: {
+              'Authorization': token
             }
           })
             .then(response => {
               console.log('Signup successful:', response);
-              this.$router.replace({ path: '/group', query: { groupName: this.groupName } }); // route to group profile page
+              this.$router.replace({ path: '/dashboard' }); // route to dashboard - they should see the created group here
             })
             .catch(e => {
               this.seen = false;
@@ -194,8 +187,13 @@ export default {
         }
       });
     },
-    Cancel () {
-      if (confirm('Are you sure?')) { this.$router.replace({ path: '/dashboard' }) }; // route to dashboard !!!STOP THE VALIDATE AND SUBMIT FROM HAPPENING!!!
+    cancel () { 
+      if (confirm('Are you sure?')) { this.$router.replace({ path: '/dashboard' }) }; // route to dashboard
+    },
+    clickHandeler (event) {
+      var button = event.target.innerHTML;
+      if (button === 'Create Group') this.validateBeforeSubmit();
+      if (button === 'Cancel') this.cancel();
     }
   }
 }
