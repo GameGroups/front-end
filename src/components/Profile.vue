@@ -7,17 +7,16 @@
 
       <div class="primary-info">
         <h2 class="displayname">{{ $store.state.currentUser.nickname }}</h2>
-        <blockquote class="tagline">{{ $store.state.currentUser['custom:tagline'] }}</blockquote>
+        <blockquote class="tagline">{{ $store.state.currentUser['custom:tagline'] ? $store.state.currentUser['custom:tagline'] : ''  }}</blockquote>
 
         <ul class="user-stats">
-          <li class="skill-level">{{ $store.state.currentUser['custom:skill-level'] }}</li>
-          <li class="time-commitment">{{ $store.state.currentUser['custom:time-commitment'] }}</li>
-          <li class="time-region">{{ $store.state.currentUser['custom:region'] }}</li>
+          <li class="skill-level">{{ $store.state.currentUser['custom:skill-level'] ? $store.state.currentUser['custom:skill-level'] : 'No skill level set -' }}</li>
+          <li class="time-commitment">{{ $store.state.currentUser['custom:time-commitment'] ? $store.state.currentUser['custom:time-commitment'] : ' No time commitment set - ' }}</li>
+          <li class="time-region">{{ $store.state.currentUser['custom:region'] ? $store.state.currentUser['custom:region'] : 'Somewhere' }}</li>
         </ul>
-
       </div>
 
-      <div class="secondary-info">
+      <!--<div class="secondary-info">
         <p class="top-games-title">Top 3 Games:</p>
         <div class="top-games">
           <ol>
@@ -26,15 +25,13 @@
             <li>Game 3</li>
           </ol>
         </div>
-      </div>
+      </div>-->
     </div>
 
     <div class="interaction-bar col-md-12"></div>
 
     <div class="profile-bio col-md-9">
-      <p class="bio">
-        {{ $store.state.currentUser['custom:bio'] }}
-      </p>
+      <p class="bio">{{ $store.state.currentUser['custom:bio'] ? $store.state.currentUser['custom:bio'] : 'No bio has been set.' }}</p>
     </div>
 
     <div class="groups-sidebar col-md-3"></div>
