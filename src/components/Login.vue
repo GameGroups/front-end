@@ -139,7 +139,7 @@ export default {
     }
   }
 
-  @media only screen and (max-width: 378px)  {
+  @media only screen and (max-width: 450px)  {
     .login-container {
       background: none;
       padding: 15px;
