@@ -72,7 +72,6 @@ import jwtDecode from 'jwt-decode';
 import Axios from 'axios';
 import store from '../store';
 import cognitoUser from 'amazon-cognito-identity-js'
-import mymodal from './GamesModal'
 
 export default {
   name: 'LoggedIn',
@@ -94,9 +93,6 @@ export default {
       groups: [],
       gameSubs: []
     }
-  },
-  components: {
-    mymodal
   },
   methods: {
     logout: function () {
