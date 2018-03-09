@@ -119,6 +119,10 @@ export default {
   },
   beforeCreate: function () {
     // Make API call to get appropriate user for a username
+    console.log(this.$router.currentRoute.params.id);
+    this.$cognitoAuth.getUserByUsername('Bob_Ross', function (val) {
+      console.log(val);
+    });
   }
 }
 </script>
