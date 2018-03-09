@@ -142,7 +142,6 @@
         </div>
         <div class="btnContainer">
             <button class="btn btn-primary">Sign Up</button>
-            <button class="btn btn-light">Cancel</button>
         </div>
       </form>
     </div>
