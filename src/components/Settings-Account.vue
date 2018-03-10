@@ -7,9 +7,9 @@
     <div class="hr"></div>
 
     <div class="col-sm-6 col-sm-offset-6 form-col form-container">
-      <div class="alert-success" v-if="successMsg.length > 0">{{successMsg}}</div>
+      <div class="alert alert-success" v-if="successMsg">{{successMsg}}</div>
       <form @submit.prevent="update(user.password)">
-        <div class="instructions-container">
+        <div v-if="seen" class="instructions-container">
           <ul class="instructions">
             <li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
           </ul>
@@ -134,6 +134,7 @@ export default {
       errorArray: [],
       boolInstructions: true,
       successMsg: '',
+      seen: true,
       user: {
         nickname: '',
         password: '',
@@ -189,7 +190,7 @@ export default {
       };
       this.user.password = '';
       const authenticationDetails = new AuthenticationDetails(authenticationData);
-      const poolData = { UserPoolId: config.COGNITO_USER_POOL_ID,
+      const poolData = { UserPoolId: config.COGNITO_USER_POOL_ID.toString(),
         ClientId: config.COGNITO_CLIENT_ID
       };
       const userPool = new CognitoUserPool(poolData);
@@ -199,22 +200,25 @@ export default {
       };
       // const cognitoUser = new CognitoUser(userData);
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
+        onSuccess: (result) => {
           let refreshToken = cognitoUser.getSignInUserSession().getRefreshToken();
           /* Use the idToken for Logins Map when Federating User Pools with Cognito Identity or when passing through an Authorization Header to an API Gateway Authorizer */
 
-          cognitoUser.updateAttributes(attributeList, function (err, result) {
+          cognitoUser.updateAttributes(attributeList, (err, result) => {
             if (err) {
-              this.putError(err);
-              this.boolError = true;
-              this.boolInstructions = false;
-              this.errorArray.push(err);
-              console.error(err)
+              this.error = err;
+              window.scrollTo(0, 0);
             } else {
-              alert('success')
-              cognitoUser.refreshSession(refreshToken, function (err, result) {
+              cognitoUser.refreshSession(refreshToken, (err, session) => {
                 if (err) {
-                  console.log(err);
+                  this.error = err;
+                  window.scrollTo(0, 0);
+                } else {
+                  this.successMsg = 'Profile updated successfully!'
+                  window.scrollTo(0, 0);
+                  this.token = jwtDecode(session.getIdToken().jwtToken);
+                  this.seen = true;
+                  this.error = null;
                 }
                 // console.log('idToken + ' + result.idToken.jwtToken);
                 // console.log('access token + ' + result.getAccessToken().getJwtToken());
@@ -222,13 +226,16 @@ export default {
             }
           });
         },
-        onFailure: function (err) {
+        onFailure: (err) => {
           if (err.name === 'NotAuthorizedException') {
-            errorMsg = 'Error: Account could not be authenticated. Confirm that your password was entered correctly.';
-            alert(errorMsg);
+            this.error = err;
+            this.error.message = 'Could not update profile: Confirm your password was entered correctly.';
+            window.scrollTo(0, 0);
+            this.seen = false;
           } else {
-            errorMsg = err;
-            alert('other' + errorMsg);
+            this.error = err;
+            this.seen = false;
+            window.scrollTo(0, 0)
           }
         }
       });
@@ -371,6 +378,15 @@ export default {
   }
   .red {
     color: red;
+  }
+  .errorList {
+    padding-left: 25px;
+    margin-bottom: 0;
+    list-style-type: square;
+  }
+  .errorLi {
+    line-height: 1.2;
+    margin-bottom: 10px;
   }
 
   @media only screen and (max-width: 440px)  {

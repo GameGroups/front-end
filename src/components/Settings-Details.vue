@@ -30,7 +30,7 @@
         <div class="card-block">
           <p>Enter your password to confirm changes</p>
           <form class="email-form" @submit.prevent="changeEmail(password)" >
-            <div v-if="this.error" class="alert alert-danger">{{this.error.message}}</div>
+            <div v-if="this.changeEmailErr" class="alert alert-danger">{{this.changeEmailErr.message}}</div>
             <span class="form-label no-padding">Your Email: </span>
             <span>{{yourEmail}}</span>
 
@@ -55,13 +55,13 @@
       </div>
     </div>
       <div class="card">
-        <a v-on:click="showStatus = !showStatus, resetEmailForm()" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
+        <a v-on:click="showStatus = !showStatus, resetVerifyForm()" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
           <div class="card-header can-edit" role="tab" id="headingFour">
             <svg v-bind:class="{rotate: showStatus}" width="20" height="15" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
             <h5 class="mb-0">
-              Email Status
+              Email Status:
               <span class="alert-success email-status" v-if="emailStatus">Verified</span>
-              <span class="alert-danger email-status" v-else>Unverified</span>
+              <span class="alert-danger email-status" v-if="!emailStatus">Unverified</span>
             </h5>
           </div>
         </a>
@@ -71,9 +71,11 @@
               <p>Your email is verified - No action is required.</p>
             </template>
             <template v-if="!emailStatus">
-              <p>Your email is unverified - Please enter the verification code that was sent to your email below to confirm your email.</p>
+              <p>Your email is unverified - Please enter the verification code that was sent to your email below to confirm your email. Click
+                <span class="code-link" v-on:click="resendCode()"><u>here</u></span> to resend code.
+                <span id="code-sent" class="alert-success">New code sent!</span></p>
               <form class="password-form" @submit.prevent="verifyEmail(veriCode)" >
-                <div v-if="this.error" class="alert alert-danger">{{this.error.message}}</div>
+                <div v-if="this.verifyEmailErr" class="alert alert-danger">{{this.verifyEmailErr.message}}</div>
                 <div class="form-group required">
                   <span class="form-label no-padding">Verification Code</span>
                   <input v-model="veriCode"  v-validate="'required'" type="text" :class="{'form-control': true, 'input-error': errors.has('Verification Code') }" name="Verification Code" required>
@@ -91,7 +93,7 @@
       <div class="card">
         <a v-on:click="showPass = !showPass, resetPassForm()" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
         <div class="card-header can-edit" role="tab" id="headingThree">
-          <svg v-bind:class="{rotate2: showPass}" width="20" height="15" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
+          <svg v-bind:class="{rotate: showPass}" width="20" height="15" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
           <h5 class="mb-0">
               Change Password
           </h5>
@@ -101,10 +103,10 @@
           <div class="card-block">
               <p>New password must be a minimum 8 characters and contain: 1 uppercase letter, 1 number</p>
             <form class="password-form" @submit.prevent="changePassword(currentPassword, newPassword)" >
-              <div v-if="this.error" class="alert alert-danger">{{this.error.message}}</div>
+              <div v-if="this.changePassErr" class="alert alert-danger">{{this.changePassErr.message}}</div>
               <div class="form-group required">
                 <span class="form-label no-padding">Current Password</span>
-                <input v-model="currentPassword"  v-validate="'required'" type="password" :class="{'form-control': true, 'input-error': errors.has('Current Password') }" name="Current Password" required>
+                <input v-model="currentPassword"  v-validate="'required|min:8'" type="password" :class="{'form-control': true, 'input-error': errors.has('Current Password') }" name="Current Password" required>
                 <i v-show="errors.has('Current Password')"></i>
                 <p v-show="errors.has('Current Password')" class="help-error no-padding">{{ errors.first('Current Password') }}</p>
               </div>
@@ -163,6 +165,7 @@ export default {
     return {
       showEmail: false,
       showPass: false,
+      showStatus: false,
       currentPassword: '',
       newPassword: '',
       confirmPass: '',
@@ -170,57 +173,92 @@ export default {
       successMsg: '',
       newEmail: '',
       password: '',
-      showStatus: false,
       veriCode: '',
       emailStatus: null,
       warningMsg: '',
-      yourEmail: ''
+      yourEmail: '',
+      changeEmailErr: null,
+      verifyEmailErr: null,
+      changePassErr: null
     }
   },
   methods: {
-    rotate: function () {
-      this.show = !this.show
+    showDelete (evt) {
+      let el = evt.target
+      setTimeout(() => {
+        el.classList.remove('show-delete')
+      }, 3000)
+    },
+    resetMenus: function () {
+      this.showEmail = false;
+      this.showPass = false;
+      this.showStatus = false;
+      this.error = null;
+      this.$validator.reset();
+
+      let x = document.getElementById('collapseTwo');
+      let y = document.getElementById('collapseThree');
+      let z = document.getElementById('collapseFour');
+      x.className = 'collapse';
+      y.className = 'collapse';
+      z.className = 'collapse';
+
+      window.scrollTo(0, 0);
     },
     resetPassForm: function () {
       this.currentPassword = '';
       this.newPassword = '';
       this.confirmPass = '';
-      this.error = null;
+
+      this.changePassErr = null;
       this.successMsg = '';
+      this.warningMsg = '';
       this.$validator.reset();
     },
     resetEmailForm: function () {
       this.newEmail = '';
       this.password = '';
-      this.error = null;
+
+      this.changeEmailErr = null;
       this.successMsg = '';
       this.warningMsg = '';
       this.$validator.reset();
+    },
+    resetVerifyForm: function () {
+      this.veriCode = '';
+
+      this.verifyEmailErr = null;
+      this.successMsg = '';
+      this.warningMsg = '';
+      this.$validator.reset();
+    },
+    resendCode: function () {
+      this.$cognitoAuth.resendVerificationCode('email', (err, result) => {
+        if (err) {
+          this.verifyEmailErr = err;
+        } else {
+          var x = document.getElementById('code-sent')
+          x.className = 'alert-success show';
+          setTimeout(function () { x.className = x.className.replace('show', ''); }, 3000);
+        }
+      })
     },
     changePassword: function (currentPass, newPass) {
       this.$cognitoAuth.changePassword(currentPass, newPass, err => {
         if (err) {
           if (err.code === 'NotAuthorizedException') {
-            this.error = err;
-            this.error.message = 'Could not change password. Confirm your current password was entered correctly.'
+            this.changePassErr = err;
+            this.changePassErr.message = 'Could not change password. Confirm your current password was entered correctly.'
           }
-          this.error = err;
+          this.changePassErr = err;
         } else {
+          this.resetMenus();
+          this.resetPassForm();
           this.successMsg = 'Password changed successfully!';
-          let x = document.getElementById('collapseThree');
-          x.className = 'collapse';
-          this.showPass = false;
-          this.currentPassword = '';
-          this.newPassword = '';
-          this.confirmPass = '';
-          this.$validator.reset();
-          window.scrollTo(0, 0);
         }
       })
     },
     changeEmail: function (password) {
-      this.yourEmail = '';
-      // this.emailStatus = null;
       const attributeList = [];
       let email = {
         Name: 'email',
@@ -246,52 +284,43 @@ export default {
       cognitoUser.authenticateUser(authenticationDetails, {
         onFailure: (err) => {
           if (err.code === 'NotAuthorizedException') {
-            this.error = err;
-            this.error.message = 'Could not change email: Confirm your password was entered correctly.'
+            this.changeEmailErr = err;
+            this.changeEmailErr.message = 'Could not change email: Confirm your password was entered correctly.'
           }
-          this.error = err;
+          this.changeEmailErr = err;
         },
         onSuccess: (result) => {
-          cognitoUser.updateAttributes(attributeList, (err, result) => {
+          cognitoUser.updateAttributes(attributeList, (err) => {
             if (err) {
-              this.error = err;
+              this.changeEmailErr = err;
             } else {
               let refreshToken = cognitoUser.getSignInUserSession().getRefreshToken();
-              cognitoUser.refreshSession(refreshToken, (err, result) => {
+              cognitoUser.refreshSession(refreshToken, (err, session) => {
                 if (err) {
-                  this.error = err;
-                } if (result) {
-                  this.successMsg = 'Your email has been changed successfully.';
-                  this.warningMsg = 'Click email status below to verify your email!'
-                  window.scrollTo(0, 0);
-                  let x = document.getElementById('collapseTwo');
-                  let y = document.getElementById('collapseThree');
-                  let z = document.getElementById('collapseFour');
-                  x.className = 'collapse';
-                  y.className = 'collapse';
-                  z.className = 'collapse';
-                  this.newEmail = '';
-                  this.password = '';
-                  this.showEmail = false;
+                  this.changeEmailErr = err;
+                } if (session) {
+                  this.token = jwtDecode(session.getIdToken().jwtToken);
+                  this.yourEmail = this.token.email;
                   this.emailStatus = this.token.email_verified;
+                  this.resetMenus();
+                  this.resetEmailForm();
+                  this.successMsg = 'Your email has been changed successfully.';
+                  this.warningMsg = 'Click email status below to verify your email!';
 
-                  cognitoUser.getUserAttributes((err, result) => {
+                  /* cognitoUser.getUserAttributes((err, result) => {
                     if (err) {
                       alert(err);
                       return;
                     }
                     for (var i = 0; i < result.length; i++) {
-                      // console.log('name: ' + result[i].getName() + 'value: ' + result[i].getValue());
                       if (result[i].getName() === 'email') {
                         this.yourEmail = result[i].getValue();
                       }
                       if (result[i].getName() === 'email_verified') {
-                        // this.emailStatus = result[i].getValue();
-                        // console.log('status------ ' + this.emailStatus);
+                        this.emailStatus = (result[i].getValue() === true);
                       }
                     }
-                  });
-                  // console.log('status------ ' + this.emailStatus);
+                  }); */
                 }
               })
             }
@@ -300,32 +329,27 @@ export default {
       })
     },
     verifyEmail: function (veriCode) {
-      this.emailStatus = null;
-      console.log('verifyEmail function' + this.emailStatus)
       let cognitoUser = this.$cognitoAuth.getCurrentUser();
-      console.log(cognitoUser)
       cognitoUser.getSession((err, session) => {
         if (err) {
+          this.verifyEmailErr = err;
           alert(err);
         } else {
           let refreshToken = cognitoUser.getSignInUserSession().getRefreshToken();
           cognitoUser.verifyAttribute('email', veriCode, {
             onFailure: (err) => {
-              alert(err);
-              this.error = err;
+              this.verifyEmailErr = err;
             },
             onSuccess: (result) => {
-              cognitoUser.refreshSession(refreshToken, (err, result) => {
+              cognitoUser.refreshSession(refreshToken, (err, session) => {
                 if (err) {
-                  alert(err);
+                  this.verifyEmailErr = err;
                 }
-                this.successMsg = 'Email verified successfully!';
-                let x = document.getElementById('collapseFour');
-                x.className = 'collapse';
+                this.token = jwtDecode(session.getIdToken().jwtToken);
                 this.emailStatus = this.token.email_verified;
-                console.log('verifyEmail function end' + this.emailStatus)
-                this.newEmail = '';
-                this.password = '';
+                this.resetMenus();
+                this.resetVerifyForm();
+                this.successMsg = 'Email verified successfully!';
               })
             }
           });
@@ -458,5 +482,48 @@ export default {
   }
   .email-warning {
     padding-top: 0;
+  }
+  .code-link {
+    color: #007bff;
+  }
+  .code-link:hover {
+    color: #0056b3;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  #code-sent {
+    visibility: hidden;
+    padding: 0.1em .7em;
+    margin-left: .4em;
+  }
+  #code-sent.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  @-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+
+  @-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+
+  @media only screen and (max-width: 440px)  {
+    .content {
+      margin: .7em;
+    }
   }
 </style>
