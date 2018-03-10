@@ -10,6 +10,7 @@ import Settings from '@/components/Settings';
 import settingsAccount from '@/components/Settings-Account';
 import settingsGroups from '@/components/Settings-Groups';
 import settingsDetails from '@/components/Settings-Details';
+import settingsGames from '@/components/Settings-Games';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
@@ -37,6 +38,10 @@ export default new Router({
         {
           path: 'groups',
           component: settingsGroups
+        },
+        {
+          path: 'games',
+          component: settingsGames
         },
         {
           path: 'details',

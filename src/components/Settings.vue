@@ -13,6 +13,11 @@
           <p class="settings-label">Profile</p>
         </router-link>
       </div>
+      <div v-on:click="path = '/myaccount/games'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/games' }">
+        <router-link class="sidebar-link" to="/myaccount/games">
+          <svg class="settings-icon" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 1088v-128q0-14-9-23t-23-9h-192v-192q0-14-9-23t-23-9h-128q-14 0-23 9t-9 23v192h-192q-14 0-23 9t-9 23v128q0 14 9 23t23 9h192v192q0 14 9 23t23 9h128q14 0 23-9t9-23v-192h192q14 0 23-9t9-23zm576 64q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm256-256q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm256 128q0 212-150 362t-362 150q-192 0-338-128h-220q-146 128-338 128-212 0-362-150t-150-362 150-362 362-150h896q212 0 362 150t150 362z"/></svg>          <p class="settings-label">Games</p>
+        </router-link>
+      </div>
       <div v-on:click="path = '/myaccount/groups'" v-bind:class="{ 'icon-container': true, 'isActive': path == '/myaccount/groups' }">
         <router-link class="sidebar-link" to="/myaccount/groups">
           <svg class="settings-icon" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M657 896q-162 5-265 128h-134q-82 0-138-40.5t-56-118.5q0-353 124-353 6 0 43.5 21t97.5 42.5 119 21.5q67 0 133-23-5 37-5 66 0 139 81 256zm1071 637q0 120-73 189.5t-194 69.5h-874q-121 0-194-69.5t-73-189.5q0-53 3.5-103.5t14-109 26.5-108.5 43-97.5 62-81 85.5-53.5 111.5-20q10 0 43 21.5t73 48 107 48 135 21.5 135-21.5 107-48 73-48 43-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-1024-1277q0 106-75 181t-181 75-181-75-75-181 75-181 181-75 181 75 75 181zm704 384q0 159-112.5 271.5t-271.5 112.5-271.5-112.5-112.5-271.5 112.5-271.5 271.5-112.5 271.5 112.5 112.5 271.5zm576 225q0 78-56 118.5t-138 40.5h-134q-103-123-265-128 81-117 81-256 0-29-5-66 66 23 133 23 59 0 119-21.5t97.5-42.5 43.5-21q124 0 124 353zm-128-609q0 106-75 181t-181 75-181-75-75-181 75-181 181-75 181 75 75 181z"/></svg>
@@ -32,14 +37,11 @@
 import Vue from 'vue';
 import jwtDecode from 'jwt-decode';
 
-if (this.route === '/settings/account') {
-  alert('success');
-}
 export default {
-  name: 'Signup',
+  name: 'MyAccount',
   metaInfo: {
     title: 'GameGroups', // Set a title
-    titleTemplate: '%s - Settings', // Title is now "GameGroups - Hello World"
+    titleTemplate: '%s - My Account', // Title is now "GameGroups - Hello World"
     htmlAttrs: {
       lang: 'en',
       amp: undefined // "amp" has no value
