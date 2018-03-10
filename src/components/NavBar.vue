@@ -33,7 +33,7 @@
           </span>
         </div>
 
-        <router-link to="/user"><img src="http://via.placeholder.com/50x50" class="rounded float-left avatar" alt="Profile picture" v-if="$store.state.loggedIn"></router-link>
+        <router-link :to="{ path: '/user/' + $store.state.currentUser['cognito:username'] }"><img src="http://via.placeholder.com/50x50" class="rounded float-left avatar" alt="Profile picture" v-if="$store.state.loggedIn"></router-link>
       </form>
       <router-link class="nav-link btn-login" tag="button" to="/login" data-toggle="collapse" data-target=".navbar-collapse.show" v-else>Login</router-link>
       <router-link class="nav-item" to="/signup" v-if="!$store.state.loggedIn">

@@ -125,33 +125,43 @@ export default {
   },
   beforeCreate: function () {
     // Make API call to get appropriate user for a username
-    this.$cognitoAuth.getIdToken((err, jwtToken) => {
-      if (err) {
-        console.log("Dashboard: Couldn't get the session:", err, err.stack);
-      } else {
-        Axios.get(
-          'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + jwtDecode(jwtToken).sub,
-          {
-            headers: {
-              'Authorization': jwtToken
-            }
-          }
-        )
-          .then(response => {
-            if (response.data.length > 0) {
-              console.log(response);
-              this.$data.groups = response.data;
-            }
-          })
-          .catch(e => {
-            console.log(e)
-          });
-      }
-      // console.log(jwtToken);
-      // this.token = jwtDecode(jwtToken);
+    console.log('Current user: ', this.$router.currentRoute.params.id);
 
-      // state.currentUser = cognitoAuth.getCurrentUser();
-    });
+    if (!this.$router.currentRoute.params.id) {
+      this.$router.replace(this.$route.query.redirect || '/404');
+    } else {
+      this.$cognitoAuth.getIdToken((err, jwtToken) => {
+        if (err) {
+          console.log("Dashboard: Couldn't get the session:", err, err.stack);
+        } else {
+          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/user/' + this.$router.currentRoute.params.id)
+            .then(response => {
+              console.log(response);
+            })
+            .catch(e => {
+              console.error(e);
+            });
+
+          Axios.get(
+            'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + jwtDecode(jwtToken).sub,
+            {
+              headers: {
+                'Authorization': jwtToken
+              }
+            }
+          )
+            .then(response => {
+              if (response.data.length > 0) {
+                console.log(response);
+                this.$data.groups = response.data;
+              }
+            })
+            .catch(e => {
+              console.error(e);
+            });
+        }
+      });
+    }
   }
 }
 </script>
