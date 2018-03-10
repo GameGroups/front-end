@@ -10,10 +10,10 @@
 
 <script>
 export default {
-  name: 'Signup',
+  name: 'MyGroups',
   metaInfo: {
     title: 'GameGroups', // Set a title
-    titleTemplate: '%s - Account', // Title is now "GameGroups - Hello World"
+    titleTemplate: '%s - My Groups', // Title is now "GameGroups - Hello World"
     htmlAttrs: {
       lang: 'en',
       amp: undefined // "amp" has no value

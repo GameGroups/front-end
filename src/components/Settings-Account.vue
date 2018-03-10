@@ -104,7 +104,6 @@
           <button class="btn btn-primary">Update</button>
         </div>
       </form>
-      <p>token nickname {{this.token.nickname}}</p>
     </div>
   </div>
 </template>
@@ -119,10 +118,10 @@ import config from '../../config/dev.env'
 Vue.use(VeeValidate);
 
 export default {
-  name: 'Signup',
+  name: 'Profile',
   metaInfo: {
     title: 'GameGroups', // Set a title
-    titleTemplate: '%s - Account', // Title is now "GameGroups - Hello World"
+    titleTemplate: '%s - My Profile', // Title is now "GameGroups - Hello World"
     htmlAttrs: {
       lang: 'en',
       amp: undefined // "amp" has no value
@@ -153,7 +152,7 @@ export default {
       this.errorArray.push(msg);
       this.boolInstructions = false;
     },
-    update (password) {
+    update: function (password) {
       let errorMsg = '';
       let successMsg = '';
       const attributeList = [];
@@ -190,7 +189,7 @@ export default {
       };
       this.user.password = '';
       const authenticationDetails = new AuthenticationDetails(authenticationData);
-      const poolData = { UserPoolId: config.COGNITO_IDENTITY_POOL_ID,
+      const poolData = { UserPoolId: config.COGNITO_USER_POOL_ID,
         ClientId: config.COGNITO_CLIENT_ID
       };
       const userPool = new CognitoUserPool(poolData);

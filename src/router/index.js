@@ -10,6 +10,7 @@ import Settings from '@/components/Settings';
 import settingsAccount from '@/components/Settings-Account';
 import settingsGroups from '@/components/Settings-Groups';
 import settingsDetails from '@/components/Settings-Details';
+import settingsGames from '@/components/Settings-Games';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -34,6 +35,10 @@ export default new Router({
         {
           path: 'groups',
           component: settingsGroups
+        },
+        {
+          path: 'games',
+          component: settingsGames
         },
         {
           path: 'details',
