@@ -185,12 +185,6 @@ export default class CognitoAuth {
     return this.userPool.getCurrentUser()
   }
 
-  getUserByUsername (username, cb) {
-    return this.userPool.GetUser({
-      username: username
-    });
-  }
-
   // very primitive change listener
   onChange () {}
 }

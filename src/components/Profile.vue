@@ -87,6 +87,9 @@
 <script>
 import store from '../store';
 import svgData from '../components/SVGPath.js';
+import config from '../../config/dev.env'
+import {CognitoIdentityServiceProvider} from 'aws-sdk'
+import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 
 export default {
   name: 'Profile',
@@ -119,9 +122,16 @@ export default {
   },
   beforeCreate: function () {
     // Make API call to get appropriate user for a username
-    console.log(this.$router.currentRoute.params.id);
-    this.$cognitoAuth.getUserByUsername('Bob_Ross', function (val) {
-      console.log(val);
+    this.$cognitoAuth.getIdToken((err, jwtToken) => {
+      if (err) {
+        console.log("Dashboard: Couldn't get the session:", err, err.stack);
+        return;
+      }
+      console.log('REMOVE ME');
+      // console.log(jwtToken);
+      // this.token = jwtDecode(jwtToken);
+
+      // state.currentUser = cognitoAuth.getCurrentUser();
     });
   }
 }
