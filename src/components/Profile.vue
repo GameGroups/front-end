@@ -52,7 +52,7 @@
     </div>
 
     <div class="interaction-bar col-md-12">
-      <a class="btn btn-primary">Send Friend Request</a>
+      <a v-if="this.$router.currentRoute.params.id !== this.$store.state.currentUser.sub" class="btn btn-primary">Send Friend Request</a>
     </div>
 
     <div class="profile-bio col-md-9">
