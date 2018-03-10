@@ -65,9 +65,10 @@
 
       <ul class="groups-list">
         <li v-for="(group, index) in groups" :key="`group-${index}`">
-          <img class="img-fluid" src="http://via.placeholder.com/50x50" />
+          <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
+          <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
           <div>
-            <h6>{{ group.groupName }}</h6>
+            <router-link tag="h6" :to="{ path: 'group/' + group.groupId }">{{ group.groupName }}</router-link>
             <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
           </div>
         </li>
@@ -106,7 +107,7 @@ export default {
   data: function () {
     return {
       groups: [
-        { groupName: 'Group 1', memberCount: '1000' },
+        /* { groupName: 'Group 1', memberCount: '1000' },
         { groupName: 'Group 2', memberCount: '6573' },
         { groupName: 'Group 3', memberCount: '1000000' },
         { groupName: 'Group 4', memberCount: '1000000' },
@@ -115,7 +116,7 @@ export default {
         { groupName: 'Group 7', memberCount: '1024' },
         { groupName: 'Group 8', memberCount: '1024' },
         { groupName: 'Group 9', memberCount: '1024' },
-        { groupName: 'Group 10', memberCount: '1024' }
+        { groupName: 'Group 10', memberCount: '1024' } */
       ],
       skillLevelHTML: svgData.svgData.SKILL_LEVEL,
       availabilityHTML: svgData.svgData.AVAILABILITY,
@@ -247,6 +248,10 @@ export default {
         display: flex;
         // height: 50px;
         margin-bottom: 1rem;
+
+        h6, img {
+          cursor: pointer;
+        }
 
         img {
           padding-right: .5rem;
