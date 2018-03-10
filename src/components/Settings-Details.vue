@@ -18,7 +18,7 @@
       </div>
 
       <div class="card">
-      <a v-on:click="showEmail = !showEmail, resetEmailForm(password)" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+      <a v-on:click="showEmail = !showEmail, resetEmailForm()" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
         <div class="card-header can-edit" role="tab" id="headingTwo">
           <svg v-bind:class="{rotate: showEmail}" width="20" height="15" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
           <h5 class="mb-0">
@@ -32,7 +32,7 @@
           <form class="email-form" @submit.prevent="changeEmail(password)" >
             <div v-if="this.error" class="alert alert-danger">{{this.error.message}}</div>
             <span class="form-label no-padding">Your Email: </span>
-            <span v-if="this.yourEmail">{{this.yourEmail}}</span>
+            <span>{{yourEmail}}</span>
 
             <div class="form-group required new-email">
               <span class="form-label no-padding">New Email</span>
@@ -55,13 +55,13 @@
       </div>
     </div>
       <div class="card">
-        <a v-on:click="showStatus = !showStatus, resetEmailForm(password)" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
+        <a v-on:click="showStatus = !showStatus, resetEmailForm()" class="collapsed accord-a" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
           <div class="card-header can-edit" role="tab" id="headingFour">
             <svg v-bind:class="{rotate: showStatus}" width="20" height="15" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
             <h5 class="mb-0">
               Email Status
               <span class="alert-success email-status" v-if="emailStatus">Verified</span>
-              <span class="alert-danger email-status" v-if="!emailStatus">Unverified</span>
+              <span class="alert-danger email-status" v-else>Unverified</span>
             </h5>
           </div>
         </a>
@@ -190,13 +190,11 @@ export default {
       this.$validator.reset();
     },
     resetEmailForm: function () {
-      this.yourEmail = null;
       this.newEmail = '';
       this.password = '';
       this.error = null;
       this.successMsg = '';
       this.warningMsg = '';
-      this.yourEmail = this.token.email;
       this.$validator.reset();
     },
     changePassword: function (currentPass, newPass) {
@@ -221,8 +219,8 @@ export default {
       })
     },
     changeEmail: function (password) {
-      this.emailStatus = null;
-      this.yourEmail = null;
+      this.yourEmail = '';
+      // this.emailStatus = null;
       const attributeList = [];
       let email = {
         Name: 'email',
@@ -262,7 +260,7 @@ export default {
               cognitoUser.refreshSession(refreshToken, (err, result) => {
                 if (err) {
                   this.error = err;
-                } else {
+                } if (result) {
                   this.successMsg = 'Your email has been changed successfully.';
                   this.warningMsg = 'Click email status below to verify your email!'
                   window.scrollTo(0, 0);
@@ -283,12 +281,17 @@ export default {
                       return;
                     }
                     for (var i = 0; i < result.length; i++) {
-                      console.log('name' + result[i].getName() + 'value' + result[i].getValue())
+                      // console.log('name: ' + result[i].getName() + 'value: ' + result[i].getValue());
                       if (result[i].getName() === 'email') {
                         this.yourEmail = result[i].getValue();
                       }
+                      if (result[i].getName() === 'email_verified') {
+                        // this.emailStatus = result[i].getValue();
+                        // console.log('status------ ' + this.emailStatus);
+                      }
                     }
                   });
+                  // console.log('status------ ' + this.emailStatus);
                 }
               })
             }
@@ -298,6 +301,7 @@ export default {
     },
     verifyEmail: function (veriCode) {
       this.emailStatus = null;
+      console.log('verifyEmail function' + this.emailStatus)
       let cognitoUser = this.$cognitoAuth.getCurrentUser();
       console.log(cognitoUser)
       cognitoUser.getSession((err, session) => {
@@ -319,6 +323,7 @@ export default {
                 let x = document.getElementById('collapseFour');
                 x.className = 'collapse';
                 this.emailStatus = this.token.email_verified;
+                console.log('verifyEmail function end' + this.emailStatus)
                 this.newEmail = '';
                 this.password = '';
               })
