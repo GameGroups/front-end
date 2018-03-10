@@ -67,8 +67,8 @@
         <li v-for="(group, index) in groups" :key="`group-${index}`">
           <img class="img-fluid" src="http://via.placeholder.com/50x50" />
           <div>
-            <h4>{{ group.groupName }}</h4>
-            <h6 class="text-muted">{{ group.memberCount }} Members</h6>
+            <h6>{{ group.groupName }}</h6>
+            <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
           </div>
         </li>
 
@@ -90,6 +90,8 @@ import svgData from '../components/SVGPath.js';
 import config from '../../config/dev.env'
 import {CognitoIdentityServiceProvider} from 'aws-sdk'
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import jwtDecode from 'jwt-decode';
+import Axios from 'axios';
 
 export default {
   name: 'Profile',
@@ -125,9 +127,25 @@ export default {
     this.$cognitoAuth.getIdToken((err, jwtToken) => {
       if (err) {
         console.log("Dashboard: Couldn't get the session:", err, err.stack);
-        return;
+      } else {
+        Axios.get(
+          'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + jwtDecode(jwtToken).sub,
+          {
+            headers: {
+              'Authorization': jwtToken
+            }
+          }
+        )
+          .then(response => {
+            if (response.data.length > 0) {
+              console.log(response);
+              this.$data.groups = response.data;
+            }
+          })
+          .catch(e => {
+            console.log(e)
+          });
       }
-      console.log('REMOVE ME');
       // console.log(jwtToken);
       // this.token = jwtDecode(jwtToken);
 
@@ -227,11 +245,12 @@ export default {
 
       li {
         display: flex;
-        height: 50px;
+        // height: 50px;
         margin-bottom: 1rem;
 
         img {
           padding-right: .5rem;
+          height: 50px;
         }
       }
     }
