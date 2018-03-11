@@ -15,7 +15,7 @@
        <div class="form-group required">
          <span class="form-label">Group Name</span><br/>
           <label class="control-label"></label>
-          <input v-validate="'required|alpha_num|alpha_spaces'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
+          <input v-validate="'required|verify_groupName'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
           <i v-show="errors.has('Group Name')"></i>
           <p v-show="errors.has('Group Name')" class="help-error">{{ errors.first('Group Name') }}</p>
         </div>
@@ -39,7 +39,7 @@
         <div class="form-group required">
           <span class="form-label">Skill Level</span><br/>
           <label class="control-label"></label>
-          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Skill Level') }" id="listSkill" name="Skill Level" v-model="group.skill" required>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Skill Level') }" id="listSkill" name="Skill Level" v-model="group.skillLevel" required>
             <option value="">Select a Skill Level...</option>
             <option>Noob</option>
             <option>Casual</option>
@@ -100,7 +100,26 @@
         </div>
         <div class="btnContainer">
             <button class="btn btn-primary" v-on:click.prevent="clickHandeler">Create Group</button>
-            <button class="btn btn-light" v-on:click.prevent="clickHandeler">Cancel</button>
+            <button data-toggle="modal" data-target="#confirmModal" class="btn btn-light" v-on:click.prevent="clickHandeler">Cancel</button>
+        </div>
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm Cancel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to cancel creating a group?</p>
+              </div>
+              <div class="modal-footer">
+                <button v-on:click="cancel" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -114,6 +133,14 @@ import Axios from 'axios';
 import store from '../store';
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate);
+
+VeeValidate.Validator.extend('verify_groupName', {
+  getMessage: field => `Group name must contain only: letters, numbers, spaces, underscores and dashes.`,
+  validate: value => {
+    var strongRegex = new RegExp('^[A-z0-9-_ \']+$');
+    return strongRegex.test(value);
+  }
+});
 
 export default {
   name: 'CreateGroup',
@@ -134,13 +161,11 @@ export default {
         groupName: '',
         // games: [{gameID: 1, name: guild wars 2, logo: url}]
         region: '',
-        skill: '',
+        skillLevel: '',
         timeCommitment: '',
-        groupDescription: ''
-      },
-      postBody: {
-        groupName: '',
-        groupDescription: ''
+        groupDescription: '',
+        profileImage: 'http://via.placeholder.com/50x50',
+        userId: ''
       }
     };
   },
@@ -149,7 +174,7 @@ export default {
       this.errorArray = [];
       this.$validator.validateAll().then((result) => {
         if (result) {
-          this.prepare();
+          this.createGroup();
         } else {
           this.seen = false;
           window.scrollTo(0, 0);
@@ -157,19 +182,15 @@ export default {
         }
       })
     },
-    prepare () {
-      // Remove this code when the post request accepts the additional data
-      this.postBody.groupName = this.group.groupName;
-      this.postBody.groupDescription = this.group.groupDescription;
-      this.createGroup();
-    },
     createGroup () {
       if (!store.state.loggedIn) { this.$router.replace({ path: '/login' }) }; // not logged. Send them to the login page
       this.$cognitoAuth.getIdToken((err, token) => {
         if (err) {
           console.log(err);
         } else {
-          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.postBody, {
+          this.group.userId = this.$store.state.currentUser.sub;
+          // Axios.post('http://httpbin.org/post', this.group, {
+          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.group, {
             headers: {
               'Authorization': token
             }
@@ -188,12 +209,10 @@ export default {
       });
     },
     cancel () { 
-      if (confirm('Are you sure?')) { this.$router.replace({ path: '/dashboard' }) }; // route to dashboard
+      this.$router.replace({ path: '/dashboard' }); // route to dashboard
     },
     clickHandeler (event) {
-      var button = event.target.innerHTML;
-      if (button === 'Create Group') this.validateBeforeSubmit();
-      if (button === 'Cancel') this.cancel();
+      if (event.target.innerHTML === 'Create Group') this.validateBeforeSubmit();
     }
   }
 }
