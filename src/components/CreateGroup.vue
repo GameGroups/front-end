@@ -3,7 +3,8 @@
     <div class="col-sm-6 col-sm-offset-6 form-col">
       <h2>Create a Group</h2>
       <div class="instructions-container" v-if="seen">
-        <ul class="instructions"><li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
+        <ul class="instructions">
+          <li>Fields marked with an asterisk " <span class="red">*</span> " are required</li>
         </ul>
       </div>
       <div class="alert alert-danger" v-if="error">
@@ -12,15 +13,26 @@
         </ul>
       </div>
       <form>
-       <div class="form-group required">
-         <span class="form-label">Group Name</span><br/>
+        <div class="form-group noAst">
+          <span class="form-label">Profile Image</span>
+          <label class="control-label"></label>
+          <input v-on:change="handleFileSelect" v-validate="'image'" type="file" name="Profile Image" :class="{'form-control': true, 'input-error': errors.has('Profile Image') }" />
+          <i v-show="errors.has('Profile Image')"></i>
+          <p v-show="errors.has('Profile Image')" class="help-error">{{ errors.first('Profile Image') }}</p>
+        </div>
+        <div class="form-group noAst">
+          <label v-if="image.show" class="control-label"></label>
+          <img v-if="image.show" class="thumb" :src="image.src" :title="image.name"/>
+        </div>
+        <div class="form-group required">
+          <span class="form-label">Group Name</span>
           <label class="control-label"></label>
           <input v-validate="'required|verify_groupName'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
           <i v-show="errors.has('Group Name')"></i>
           <p v-show="errors.has('Group Name')" class="help-error">{{ errors.first('Group Name') }}</p>
         </div>
         <div class="form-group required">
-          <span class="form-label">Region</span><br/>
+          <span class="form-label">Region</span>
           <label class="control-label"></label>
           <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Region') }" id="listRegion" name="Region" v-model="group.region" required>
             <option value="">Select a Region...</option>
@@ -37,7 +49,7 @@
           <p v-show="errors.has('Region')" class="help-error">{{ errors.first('Region') }}</p>
         </div>
         <div class="form-group required">
-          <span class="form-label">Skill Level</span><br/>
+          <span class="form-label">Skill Level</span>
           <label class="control-label"></label>
           <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Skill Level') }" id="listSkill" name="Skill Level" v-model="group.skillLevel" required>
             <option value="">Select a Skill Level...</option>
@@ -53,7 +65,7 @@
           <p v-show="errors.has('Skill Level')" class="help-error">{{ errors.first('Skill Level') }}</p>
         </div>
         <div class="form-group required">
-          <span class="form-label">Time Commitment</span><br/>
+          <span class="form-label">Time Commitment</span>
           <label class="control-label"></label>
           <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Time Commitment') }" id="listTime" name="Time Commitment" v-model="group.timeCommitment" required>
             <option value="">Select when you game the most...</option>
@@ -66,7 +78,7 @@
           <i v-show="errors.has('Time Commitment')"></i>
           <p v-show="errors.has('Time Commitment')" class="help-error">{{ errors.first('Time Commitment') }}</p>
         </div>
-        <!-- <span class="form-label noPadding">Select your top 3 games</span><br/>
+        <!-- <span class="form-label">Select your top 3 games</span>
         <div id="game1" class="form-group required">
           <label class="control-label">1. </label>
           <select class="form-control gameSelect" required>
@@ -93,14 +105,15 @@
           </select>
         </div> -->
         <div class="form-group noAst">
-          <span class="form-label noPadding">Bio (Limit: 500 Characters)</span><br/>
-          <textarea v-validate="'max:500'" :class="{'optionalInput': true, 'form-control': true, 'input-error': errors.has('Bio') }" name="Bio" v-model="group.groupDescription" />
+          <span class="form-label">Bio (Limit: 500 Characters)</span>
+          <label class="control-label"></label>
+          <textarea v-validate="'max:500'" :class="{'form-control': true, 'input-error': errors.has('Bio') }" name="Bio" v-model="group.groupDescription" />
           <i v-show="errors.has('Bio')"></i>
           <p v-show="errors.has('Bio')" class="help-error">{{ errors.first('Bio') }}</p>
         </div>
         <div class="btnContainer">
-            <button class="btn btn-primary" v-on:click.prevent="clickHandeler">Create Group</button>
-            <button data-toggle="modal" data-target="#confirmModal" class="btn btn-light" v-on:click.prevent="clickHandeler">Cancel</button>
+          <button class="btn btn-primary" v-on:click.prevent="clickHandeler">Create Group</button>
+          <button data-toggle="modal" data-target="#confirmModal" class="btn btn-light" v-on:click.prevent="clickHandeler">Cancel</button>
         </div>
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -135,7 +148,7 @@ import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate);
 
 VeeValidate.Validator.extend('verify_groupName', {
-  getMessage: field => `Group name must contain only: letters, numbers, spaces, underscores and dashes.`,
+  getMessage: field => `Group name must contain only: letters, numbers, spaces, apostrophes, underscores and dashes.`,
   validate: value => {
     var strongRegex = new RegExp('^[A-z0-9-_ \']+$');
     return strongRegex.test(value);
@@ -166,6 +179,11 @@ export default {
         groupDescription: '',
         profileImage: 'http://via.placeholder.com/50x50',
         userId: ''
+      },
+      image: {
+        show: false,
+        src: '',
+        name: ''
       }
     };
   },
@@ -196,7 +214,7 @@ export default {
             }
           })
             .then(response => {
-              console.log('Signup successful:', response);
+              console.log('Create group successful:', response);
               this.$router.replace({ path: '/dashboard' }); // route to dashboard - they should see the created group here
             })
             .catch(e => {
@@ -213,6 +231,26 @@ export default {
     },
     clickHandeler (event) {
       if (event.target.innerHTML === 'Create Group') this.validateBeforeSubmit();
+    },
+    handleFileSelect (evt) {
+      this.image.show = false;
+      var files = evt.target.files;
+      if (files.length > 0) {
+        var f = files[0];
+        if (f.type.match('image.*')) {
+          var reader = new FileReader();
+          reader.onload = (function (theFile, data) {
+            return function (e) {
+              data.image.show = true;
+              data.image.src = e.target.result;
+              data.image.name = theFile.name;
+            };
+          })(f, this);
+          // Read in the image file as a data URL.
+          reader.readAsDataURL(f);
+          console.log(this.image);
+        }
+      }
     }
   }
 }
@@ -229,7 +267,7 @@ export default {
     max-width: 70vh;
     margin-bottom: 35px;
   }
-  .form-group .required .control-label:before {
+   .form-group.required .control-label::before {
     content:"* ";
     color:red;
   }
@@ -259,11 +297,9 @@ export default {
   .gameSelect {
     max-width: calc(95% - 17px);
   }
-  .optionalInput {
-    width: calc(95% + 11px);
-  }
-  .noAst {
-    padding-left: 11px;
+   .form-group.noAst .control-label::before {
+    content:"* ";
+    color:transparent;
   }
   .btnContainer {
     text-align: center;
@@ -282,9 +318,7 @@ export default {
     padding-left: 11px;
     font-weight: bold;
     font-size: .9em;
-  }
-  .noPadding {
-    padding: 0;
+    display: block;
   }
   .errorList {
     padding-left: 25px;
@@ -305,5 +339,10 @@ export default {
     padding-left: 11px;
     padding-right: 10px;
     color: #bd0101;
+  }
+  .thumb {
+    height: 75px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
   }
 </style>
