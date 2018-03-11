@@ -8,7 +8,7 @@
 
     <div class="row filters max-width-center">
       <div class="col-md-12">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#addGameModal">Add a Game</button>
+        <button v-on:click="getGames()" class="btn btn-primary" data-toggle="modal" data-target="#addGameModal">Add a Game</button>
       </div>
     </div>
 
@@ -52,8 +52,11 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <p>Are you sure you want to delete {{this.gameName}} from your games?</p>
+          <div class="modal-body game-modal-body">
+            <select class="form-control">
+              <option selected value="">Select a game...</option>
+              <option :key="game.gameId" v-for="game in games" :value="game.gameId">{{game.gameName}}</option>
+            </select>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Yes, Delete</button>
@@ -100,6 +103,7 @@ export default {
       Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/games')
         .then(response => {
           this.games = response.data
+          this.prepareDropdown();
         })
         .catch(e => {
           console.log(e)
@@ -108,8 +112,8 @@ export default {
     prepareDropdown: function () {
       for (let i = 0; i < this.games.length; i++) {
         for (let j = 0; j < this.subs.length; i++) {
-          if (this.games[i] === this.subs[i]) {
-            this.games.$remove(i);
+          if (this.games[i].gameId === this.subs[j].gameId) {
+            this.games.splice(i, 1)
           }
         }
       }
@@ -160,12 +164,6 @@ export default {
         }
       }
     });
-  },
-  ready: function () {
-    var self = this;
-    jquery(window).resize(function () {
-      self.$refs.thisherechart.drawChart();
-    })
   },
   beforeMount: function () {
     if (this.loggedIn) {
@@ -235,7 +233,7 @@ export default {
   svg {
     fill: #b3525c;
     float: right;
-    height: 2em;
+    height: 1.8em;
     margin-left: auto;
   }
   .svg-container {
@@ -253,5 +251,8 @@ export default {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+  }
+  .game-modal-body {
+    text-align: center;
   }
 </style>
