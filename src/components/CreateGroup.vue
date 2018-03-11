@@ -27,7 +27,7 @@
         <div class="form-group required">
           <span class="form-label">Group Name</span>
           <label class="control-label"></label>
-          <input v-validate="'required|verify_groupName'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
+          <input v-validate="'required|verify_groupName|max:50'" type="text" name="Group Name" :class="{'form-control': true, 'input-error': errors.has('Group Name') }" v-model="group.groupName" required>
           <i v-show="errors.has('Group Name')"></i>
           <p v-show="errors.has('Group Name')" class="help-error">{{ errors.first('Group Name') }}</p>
         </div>
