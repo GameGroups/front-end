@@ -110,6 +110,7 @@ import config from '../../config/dev.env'
 import {CognitoIdentityServiceProvider} from 'aws-sdk'
 import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import jwtDecode from 'jwt-decode';
+import NotFound from './NotFound.vue';
 import Axios from 'axios';
 
 export default {
@@ -144,48 +145,46 @@ export default {
   beforeCreate: function () {
     // Make API call to get appropriate user for a username
     console.log('Current user: ', this.$router.currentRoute.params.id);
+    this.$cognitoAuth.getIdToken((err, jwtToken) => {
+      if (err) {
+        console.log("Dashboard: Couldn't get the session:", err, err.stack);
+      } else {
+        Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/user/' + this.$router.currentRoute.params.id)
+          .then(userResponse => {
+            console.log('User: ', userResponse);
+            if (userResponse.data.Users.length > 0) {
+              console.log('User ID: ', userResponse.data.Users[0].Attributes[2].Value);
 
-    if (!this.$router.currentRoute.params.id) {
-      this.$router.replace(this.$route.query.redirect || '/404');
-    } else {
-      this.$cognitoAuth.getIdToken((err, jwtToken) => {
-        if (err) {
-          console.log("Dashboard: Couldn't get the session:", err, err.stack);
-        } else {
-          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/user/' + this.$router.currentRoute.params.id)
-            .then(userResponse => {
-              console.log('User: ', userResponse);
-              if (userResponse.data.Users.length > 0) {
-                console.log('User ID: ', userResponse.data.Users[0].Attributes[2].Value);
-
-                Axios.get(
-                  'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + userResponse.data.Users[0].Attributes[2].Value,
-                  {
-                    headers: {
-                      'Authorization': jwtToken
-                    }
+              Axios.get(
+                'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + userResponse.data.Users[0].Attributes[2].Value,
+                {
+                  headers: {
+                    'Authorization': jwtToken
                   }
-                )
-                  .then(response => {
-                    if (response.data.length > 0) {
-                      console.log('Groups:', response);
-                      this.$data.groups = response.data;
-                    } else {
-                      console.log('Groups == null')
-                      this.$data.groups = null;
-                    }
-                  })
-                  .catch(e => {
-                    console.error(e);
-                  });
-              }
-            })
-            .catch(e => {
-              console.error(e);
-            });
-        }
-      });
-    }
+                }
+              )
+                .then(response => {
+                  if (response.data.length > 0) {
+                    console.log('Groups:', response);
+                    this.$data.groups = response.data;
+                  } else {
+                    console.log('Groups == null')
+                    this.$data.groups = null;
+                  }
+                })
+                .catch(e => {
+                  console.error(e);
+                });
+            } else {
+              console.log('Couldn\'t find a user with the username: "', this.$router.currentRoute.params.id, '"')
+              this.$router.replace({ path: '/404', component: NotFound });
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      }
+    });
   }
 }
 </script>
