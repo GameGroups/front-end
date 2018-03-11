@@ -14,7 +14,7 @@
 
     <div class="row data max-width-center">
       <div class="col-md-12 game-row-container">
-        <div class="game-row" v-for="sub in subs" :key="sub.subscriptionId">
+        <div class="group-row" v-for="sub in subs" :key="sub.subscriptionId">
           <div class="name-container">{{sub.gameName}}</div>
           <div v-on:click="prepare(sub)" data-toggle="modal" data-target="#confirmModal" class="svg-container">
             <svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
@@ -264,7 +264,7 @@ export default {
     max-width: 40em;
     margin: 0 auto;
   }
-  .game-row {
+  .group-row {
     background: rgba(243, 243, 243, 0.68);
     padding: .2em;
     display: flex;
@@ -273,7 +273,7 @@ export default {
     flex-flow: row wrap;
     align-content: center;
   }
-  .game-row:nth-child(even) {
+  .group-row:nth-child(even) {
     background: rgba(107, 107, 107, 0.12);
   }
   .data {
@@ -290,6 +290,9 @@ export default {
   }
   .svg-container:hover {
     cursor: pointer;
+    svg {
+      fill: #9e0000;
+    }
   }
   .name-container {
     margin-left: 10px;
@@ -308,5 +311,11 @@ export default {
   .add-game-err {
     max-width: calc(100% - 4em);
     margin: 0 auto 1rem auto;
+  }
+
+  @media only screen and (max-width: 440px)  {
+    .content {
+      margin: .7em;
+    }
   }
 </style>
