@@ -8,7 +8,7 @@
 
     <div class="row filters max-width-center">
       <div class="col-md-12">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#addGameModal">Add a Game</button>
+        <button v-on:click="getGames()" class="btn btn-primary" data-toggle="modal" data-target="#addGameModal">Add a Game</button>
       </div>
     </div>
 
@@ -52,12 +52,17 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <p>Are you sure you want to delete {{this.gameName}} from your games?</p>
+          <div class="modal-body game-modal-body">
+            <p class="alert alert-danger add-game-err" v-if="addGameErr">{{this.addGameErr}}</p>
+            <select v-if="games != null && games.length > 0" v-model="gameId" id="games-select" class="form-control game-select">
+              <option selected value="">Select a game...</option>
+              <option :key="game.gameId" v-for="game in games" :value="game.gameId">{{game.gameName}}</option>
+            </select>
+            <p v-else>You've added all games already!</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Yes, Delete</button>
-            <button type="button" class="btn btn-danger" >Cancel</button>
+            <button  v-if="games != null && games.length > 0" v-on:click="addGame(gameId)" type="button" class="btn btn-primary" >Add Game</button>
+            <button id="add-cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -69,6 +74,7 @@
 import jwtDecode from 'jwt-decode';
 import Axios from 'axios';
 import Vue from 'vue';
+import veeValidate from 'vee-validate';
 
 export default {
   name: 'MyGames',
@@ -87,7 +93,9 @@ export default {
       gameName: '',
       subId: '',
       error: null,
-      games: []
+      games: [],
+      gameId: '',
+      addGameErr: null
     }
   },
   methods: {
@@ -95,10 +103,23 @@ export default {
       this.gameName = sub.gameName;
       this.subId = sub.subscriptionId;
     },
+    getSubs: function () {
+      this.subs = null;
+      Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions/forentity/' + this.token.sub)
+        .then(response => {
+          this.subs = response.data
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
     getGames: function () {
+      this.addGameErr = null;
+      this.games = null;
       Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/games')
         .then(response => {
           this.games = response.data
+          this.prepareDropdown();
         })
         .catch(e => {
           console.log(e)
@@ -106,9 +127,9 @@ export default {
     },
     prepareDropdown: function () {
       for (let i = 0; i < this.games.length; i++) {
-        for (let j = 0; j < this.subs.length; i++) {
-          if (this.games[i] === this.subs[i]) {
-            this.games.$remove(i);
+        for (let j = 0; j < this.subs.length; j++) {
+          if (this.games[i].gameId === this.subs[j].gameId) {
+            this.games.splice(i, 1)
           }
         }
       }
@@ -116,11 +137,8 @@ export default {
     clear: function () {
       this.gameName = '';
       this.subId = '';
-      console.log('clear' + this.gameName);
-      console.log('clear' + this.subId);
     },
     deleteGame: function () {
-      alert(this.subId);
       let config = {
         headers: { 'Authorization': this.token }
       };
@@ -128,6 +146,8 @@ export default {
         .then(response => {
           Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions/forentity/' + this.token.sub)
             .then(response => {
+              this.gameId = '';
+              this.getGames();
               if (response.data.length > 0) {
                 // console.log(response.data)
                 this.hasSubs = true;
@@ -146,6 +166,40 @@ export default {
           console.log(e);
           this.clear();
         });
+    },
+    addGame: function (gameId) {
+      if (gameId !== '') {
+        let config = {
+          headers: {'Content-Type': 'application/json'}
+        };
+        const rbody = { gameId: this.gameId, entityId: this.token.sub };
+
+        Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/games/' + this.gameId)
+          .then(response => {
+            if (response.data.length > 0) {
+              Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions', rbody)
+                .then(response => {
+                  let x = document.getElementById('add-cancel');
+                  x.click();
+                  this.addGameErr = null;
+                  this.subs = null;
+                  document.getElementById('games-select').innerHTML = '';
+                  this.getSubs();
+                  this.getGames();
+                  this.gameId = '';
+                })
+                .catch(e => {
+                  this.addGameErr = e;
+                })
+            }
+          })
+          .catch(e => {
+            this.addGameErr = 'Game could not be added or does not exist';
+            console.log(e)
+          });
+      } else {
+        this.addGameErr = 'Select a game to add'
+      }
     }
   },
   created: function () {
@@ -159,12 +213,6 @@ export default {
         }
       }
     });
-  },
-  ready: function () {
-    var self = this;
-    jquery(window).resize(function () {
-      self.$refs.thisherechart.drawChart();
-    })
   },
   beforeMount: function () {
     if (this.loggedIn) {
@@ -234,7 +282,7 @@ export default {
   svg {
     fill: #b3525c;
     float: right;
-    height: 2em;
+    height: 1.8em;
     margin-left: auto;
   }
   .svg-container {
@@ -252,5 +300,13 @@ export default {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+  }
+  .game-select {
+    max-width: calc(100% - 4em);
+    margin: 0 auto;
+  }
+  .add-game-err {
+    max-width: calc(100% - 4em);
+    margin: 0 auto 1rem auto;
   }
 </style>
