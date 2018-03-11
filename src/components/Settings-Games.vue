@@ -72,7 +72,6 @@
 import jwtDecode from 'jwt-decode';
 import Axios from 'axios';
 import Vue from 'vue';
-import jquery from 'jquery';
 
 export default {
   name: 'MyGames',
