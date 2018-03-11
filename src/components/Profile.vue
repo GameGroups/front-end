@@ -80,14 +80,17 @@
               <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
               <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
               <div>
-                <router-link tag="h6" :to="{ path: 'group/' + group.groupId }">{{ group.groupName }}</router-link>
+                <router-link tag="h6" :to="{ path: '/group/' + group.groupId }">{{ group.groupName }}</router-link>
                 <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
               </div>
             </li>
           </div>
 
           <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
-            No Friends content yet. :(
+            <p>You have no friends.</p>
+            <div class="sadface">
+              <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1262 1229q8 25-4 48.5t-37 31.5-49-4-32-38q-25-80-92.5-129.5t-151.5-49.5-151.5 49.5-92.5 129.5q-8 26-31.5 38t-48.5 4q-26-8-38-31.5t-4-48.5q37-121 138-195t228-74 228 74 138 195zm-494-589q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm512 0q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm256 256q0-130-51-248.5t-136.5-204-204-136.5-248.5-51-248.5 51-204 136.5-136.5 204-51 248.5 51 248.5 136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5zm128 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>
+            </div>
           </div>
         </div>
 
@@ -318,6 +321,16 @@ export default {
 
   .tab-content {
     margin-top: 1rem;
+  }
+
+  #friends {
+    display: flex;
+    flex-direction: column;
+
+    p, .sadface {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   @media (max-width: 767px) {
