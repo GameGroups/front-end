@@ -6,23 +6,23 @@
       </div>
 
       <div class="primary-info">
-        <h2 class="displayname">{{ $store.state.currentUser.nickname }} <span class="region d-none d-md-inline d-block">[{{ $store.state.currentUser['custom:region'] }}]</span></h2>
-        <blockquote class="tagline">&#34;{{ $store.state.currentUser['custom:tagline'] ? $store.state.currentUser['custom:tagline'] : ''  }}&#34;</blockquote>
+        <h2 class="displayname">{{ user.nickname }} <span class="region d-none d-md-inline d-block">[{{ user['custom:region'] }}]</span></h2>
+        <blockquote class="tagline">&#34;{{ user['custom:tagline'] ? user['custom:tagline'] : ''  }}&#34;</blockquote>
 
         <ul class="user-stats">
           <li class="skill-level">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 460.731 460.731" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 460.731 460.731" v-html="skillLevelHTML"></svg>
-            <span>{{ $store.state.currentUser['custom:skill-level'] ? $store.state.currentUser['custom:skill-level'] : 'No skill level set -' }}</span>
+            <span>{{ user['custom:skill-level'] ? user['custom:skill-level'] : 'No skill level set -' }}</span>
           </li>
 
           <li class="time-commitment">
             <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 512 512" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 512 512" v-html="availabilityHTML"></svg>
-            {{ $store.state.currentUser['custom:time-commitment'] ? $store.state.currentUser['custom:time-commitment'] : ' No time commitment set - ' }}
+            {{ user['custom:time-commitment'] ? user['custom:time-commitment'] : ' No time commitment set - ' }}
           </li>
 
           <!--<li class="region">-->
             <!--&lt;!&ndash;<svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 1000 1000" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 1000 1000" v-html="regionHTML"></svg>&ndash;&gt;-->
-            <!--{{ $store.state.currentUser['custom:region'] ? $store.state.currentUser['custom:region'] : 'Somewhere' }}-->
+            <!--{{ user['custom:region'] ? user['custom:region'] : 'Somewhere' }}-->
           <!--</li>-->
         </ul>
 
@@ -52,12 +52,12 @@
     </div>
 
     <div class="interaction-bar col-md-12">
-      <a v-if="this.$router.currentRoute.params.id !== this.$store.state.currentUser.sub" class="btn btn-primary">Send Friend Request</a>
+      <a v-if="this.$router.currentRoute.params.id !== this.user.username" class="btn btn-primary">Send Friend Request</a>
     </div>
 
     <div class="profile-bio col-md-9">
       <h5>Bio:</h5>
-      <p class="bio">{{ $store.state.currentUser['custom:bio'] ? $store.state.currentUser['custom:bio'] : 'No bio has been set.' }}</p>
+      <p class="bio">{{ user['custom:bio'] ? user['custom:bio'] : 'No bio has been set.' }}</p>
     </div>
 
     <div class="groups-sidebar col-md-3">
@@ -115,28 +115,20 @@ import Axios from 'axios';
 
 export default {
   name: 'Profile',
-  metaInfo: {
-    title: 'GameGroups',
-    // titleTemplate: '%s - ' + (store.state.loggedIn ? store.state.currentUser.nickname : ''),
-    htmlAttrs: {
-      lang: 'en',
-      amp: undefined
-    }
+  metaInfo () {
+    return {
+      title: 'GameGroups',
+      titleTemplate: '%s - ' + this.$data.user.nickname,
+      htmlAttrs: {
+        lang: 'en',
+        amp: undefined
+      }
+    };
   },
   data: function () {
     return {
-      groups: [
-        /* { groupName: 'Group 1', memberCount: '1000' },
-        { groupName: 'Group 2', memberCount: '6573' },
-        { groupName: 'Group 3', memberCount: '1000000' },
-        { groupName: 'Group 4', memberCount: '1000000' },
-        { groupName: 'Group 5', memberCount: '1024' },
-        { groupName: 'Group 6', memberCount: '1024' },
-        { groupName: 'Group 7', memberCount: '1024' },
-        { groupName: 'Group 8', memberCount: '1024' },
-        { groupName: 'Group 9', memberCount: '1024' },
-        { groupName: 'Group 10', memberCount: '1024' } */
-      ],
+      groups: [],
+      user: '',
       skillLevelHTML: svgData.svgData.SKILL_LEVEL,
       availabilityHTML: svgData.svgData.AVAILABILITY,
       regionHTML: svgData.svgData.REGION
@@ -151,9 +143,14 @@ export default {
       } else {
         Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/user/' + this.$router.currentRoute.params.id)
           .then(userResponse => {
-            console.log('User: ', userResponse);
             if (userResponse.data.Users.length > 0) {
-              console.log('User ID: ', userResponse.data.Users[0].Attributes[2].Value);
+              this.$data.user = userResponse.data.Users[0].Attributes.reduce(function (total, currentValue) {
+                total[currentValue.Name] = total[currentValue.Name] || [];
+                total[currentValue.Name] = currentValue.Value;
+                return total;
+              }, {});
+              this.$data.user.username = userResponse.data.Users[0].Username;
+              console.log('USER TEST: ', this.$data.user);
 
               Axios.get(
                 'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + userResponse.data.Users[0].Attributes[2].Value,
