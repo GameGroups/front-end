@@ -61,17 +61,35 @@
     </div>
 
     <div class="groups-sidebar col-md-3">
-      <h5>Groups:</h5>
-
       <ul class="groups-list">
-        <li v-for="(group, index) in groups" :key="`group-${index}`">
-          <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
-          <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
-          <div>
-            <router-link tag="h6" :to="{ path: 'group/' + group.groupId }">{{ group.groupName }}</router-link>
-            <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
+        <ul class="nav nav-tabs" id="profile-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="true">Groups</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends</a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="tab-content">
+          <div class="tab-pane fade show active" id="groups" role="tabpanel" aria-labelledby="groups-tab">
+            <li v-if="!groups">
+              <p>This user has not joined any groups.</p>
+            </li>
+            <li v-else v-for="(group, index) in groups" :key="`group-${index}`">
+              <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
+              <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
+              <div>
+                <router-link tag="h6" :to="{ path: 'group/' + group.groupId }">{{ group.groupName }}</router-link>
+                <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
+              </div>
+            </li>
           </div>
-        </li>
+
+          <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+            No Friends content yet. :(
+          </div>
+        </div>
 
         <!--<li>
           <img class="img-fluid" src="http://via.placeholder.com/50x50" />
@@ -135,25 +153,31 @@ export default {
           console.log("Dashboard: Couldn't get the session:", err, err.stack);
         } else {
           Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/user/' + this.$router.currentRoute.params.id)
-            .then(response => {
-              console.log(response);
-            })
-            .catch(e => {
-              console.error(e);
-            });
+            .then(userResponse => {
+              console.log('User: ', userResponse);
+              if (userResponse.data.Users.length > 0) {
+                console.log('User ID: ', userResponse.data.Users[0].Attributes[2].Value);
 
-          Axios.get(
-            'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + jwtDecode(jwtToken).sub,
-            {
-              headers: {
-                'Authorization': jwtToken
-              }
-            }
-          )
-            .then(response => {
-              if (response.data.length > 0) {
-                console.log(response);
-                this.$data.groups = response.data;
+                Axios.get(
+                  'https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + userResponse.data.Users[0].Attributes[2].Value,
+                  {
+                    headers: {
+                      'Authorization': jwtToken
+                    }
+                  }
+                )
+                  .then(response => {
+                    if (response.data.length > 0) {
+                      console.log('Groups:', response);
+                      this.$data.groups = response.data;
+                    } else {
+                      console.log('Groups == null')
+                      this.$data.groups = null;
+                    }
+                  })
+                  .catch(e => {
+                    console.error(e);
+                  });
               }
             })
             .catch(e => {
@@ -247,7 +271,6 @@ export default {
   }
 
   .groups-sidebar {
-    //background: red;
     height: 60vh;
     overflow-y: scroll;
 
@@ -290,6 +313,16 @@ export default {
 
   .upvotes svg { fill: green; }
   .downvotes svg { fill: red; }
+
+  #profile-tabs {
+    li {
+      margin: 0;
+    }
+  }
+
+  .tab-content {
+    margin-top: 1rem;
+  }
 
   @media (max-width: 767px) {
     .profile-header {
