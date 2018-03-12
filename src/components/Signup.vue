@@ -152,6 +152,7 @@
 
 import Vue from 'vue';
 import VeeValidate from 'vee-validate';
+import store from '../store';
 Vue.use(VeeValidate);
 
 VeeValidate.Validator.extend('verify_password', {
@@ -245,6 +246,11 @@ export default {
     },
     hasUppercase (myString) {
       return /[A-Z]/.test(myString);
+    }
+  },
+  beforeMount () {
+    if (store.state.loggedIn) {
+      this.$router.replace(this.$route.query.redirect || '/dashboard');
     }
   }
 }
