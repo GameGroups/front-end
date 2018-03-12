@@ -6,23 +6,23 @@
       </div>
 
       <div class="primary-info">
-        <h2 class="displayname">{{ group.groupName }} <span class="region d-none d-md-inline d-block">[{{ user['custom:region'] }}]</span></h2>
-        <blockquote class="tagline">&#34;{{ user['custom:tagline'] ? user['custom:tagline'] : ''  }}&#34;</blockquote>
+        <h2 class="displayname">{{ group.groupName }} <span class="region d-none d-md-inline d-block">[{{ group.region }}]</span></h2>
+        <!--<blockquote class="tagline">&#34;{{ group['custom:tagline'] ? group['custom:tagline'] : ''  }}&#34;</blockquote>-->
 
-        <ul class="user-stats">
+        <ul class="group-stats">
           <li class="skill-level">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 460.731 460.731" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 460.731 460.731" v-html="skillLevelHTML"></svg>
-            <span>{{ user['custom:skill-level'] ? user['custom:skill-level'] : 'No skill level set -' }}</span>
+            <span>{{ group.skillLevel ? group.skillLevel : 'No skill level set -' }}</span>
           </li>
 
           <li class="time-commitment">
             <svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 512 512" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 512 512" v-html="availabilityHTML"></svg>
-            {{ user['custom:time-commitment'] ? user['custom:time-commitment'] : ' No time commitment set - ' }}
+            {{ group.timeCommitment ? group.timeCommitment : ' No time commitment set - ' }}
           </li>
 
           <!--<li class="region">-->
             <!--&lt;!&ndash;<svg class="centerSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" enable-background="new 0 0 1000 1000" xml:space="preserve" width="52" x="0px" y="0px" viewBox="0 0 1000 1000" v-html="regionHTML"></svg>&ndash;&gt;-->
-            <!--{{ user['custom:region'] ? user['custom:region'] : 'Somewhere' }}-->
+            <!--{{ group['custom:region'] ? group['custom:region'] : 'Somewhere' }}-->
           <!--</li>-->
         </ul>
 
@@ -38,71 +38,52 @@
           </div>
         </div>
       </div>
-
-      <!--<div class="secondary-info">
-        <p class="top-games-title">Top 3 Games:</p>
-        <div class="top-games">
-          <ol>
-            <li>Game 1</li>
-            <li>Game 2</li>
-            <li>Game 3</li>
-          </ol>
-        </div>
-      </div>-->
     </div>
 
     <div class="interaction-bar col-md-12">
-      <a v-if="this.$router.currentRoute.params.id !== this.user.username" class="btn btn-primary">Send Friend Request</a>
+      <!--<a v-if="this.$router.currentRoute.params.id !== this.group.groupName" class="btn btn-primary">Send Friend Request</a>-->
     </div>
 
     <div class="profile-bio col-md-9">
-      <h5>Bio:</h5>
-      <p class="bio">{{ user['custom:bio'] ? user['custom:bio'] : 'No bio has been set.' }}</p>
+      <h5>Description:</h5>
+      <p class="bio">{{ group.groupDescription ? group.groupDescription : 'No description has been set.' }}</p>
     </div>
 
-    <div class="groups-sidebar col-md-3">
-      <ul class="groups-list">
-        <ul class="nav nav-tabs" id="profile-tabs" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="true">Groups</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends</a>
-          </li>
-        </ul>
+    <!--<div class="groups-sidebar col-md-3">-->
+      <!--<ul class="groups-list">-->
+        <!--<ul class="nav nav-tabs" id="profile-tabs" role="tablist">-->
+          <!--<li class="nav-item">-->
+            <!--<a class="nav-link active" id="groups-tab" data-toggle="tab" href="#groups" role="tab" aria-controls="groups" aria-selected="true">Groups</a>-->
+          <!--</li>-->
+          <!--<li class="nav-item">-->
+            <!--<a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends</a>-->
+          <!--</li>-->
+        <!--</ul>-->
 
-        <div class="tab-content" id="tab-content">
-          <div class="tab-pane fade show active" id="groups" role="tabpanel" aria-labelledby="groups-tab">
-            <li v-if="!groups">
-              <p>This user has not joined any groups.</p>
-            </li>
-            <li v-else v-for="(group, index) in groups" :key="`group-${index}`">
+        <!--<div class="tab-content" id="tab-content">-->
+          <!--<div class="tab-pane fade show active" id="groups" role="tabpanel" aria-labelledby="groups-tab">-->
+            <!--<li v-if="!groups">-->
+              <!--<p>This group has not joined any groups.</p>-->
+            <!--</li>-->
+            <!--<li v-else v-for="(group, index) in groups" :key="`group-${index}`">-->
               <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
-              <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
-              <div>
-                <router-link tag="h6" :to="{ path: '/group/' + group.groupId }">{{ group.groupName }}</router-link>
+              <!--<router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>-->
+              <!--<div>-->
+                <!--<router-link tag="h6" :to="{ path: '/group/' + group.groupId }">{{ group.groupName }}</router-link>-->
                 <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
-              </div>
-            </li>
-          </div>
+              <!--</div>-->
+            <!--</li>-->
+          <!--</div>-->
 
-          <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">
-            <p>You have no friends.</p>
-            <div class="sadface">
-              <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1262 1229q8 25-4 48.5t-37 31.5-49-4-32-38q-25-80-92.5-129.5t-151.5-49.5-151.5 49.5-92.5 129.5q-8 26-31.5 38t-48.5 4q-26-8-38-31.5t-4-48.5q37-121 138-195t228-74 228 74 138 195zm-494-589q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm512 0q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm256 256q0-130-51-248.5t-136.5-204-204-136.5-248.5-51-248.5 51-204 136.5-136.5 204-51 248.5 51 248.5 136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5zm128 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <!--<li>
-          <img class="img-fluid" src="http://via.placeholder.com/50x50" />
-          <div>
-            <h4>GroupName</h4>
-            <h6 class="text-muted">1024 Members</h6>
-          </div>
-        </li>-->
-      </ul>
-    </div>
+          <!--<div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab">-->
+            <!--<p>You have no friends.</p>-->
+            <!--<div class="sadface">-->
+              <!--<svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1262 1229q8 25-4 48.5t-37 31.5-49-4-32-38q-25-80-92.5-129.5t-151.5-49.5-151.5 49.5-92.5 129.5q-8 26-31.5 38t-48.5 4q-26-8-38-31.5t-4-48.5q37-121 138-195t228-74 228 74 138 195zm-494-589q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm512 0q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm256 256q0-130-51-248.5t-136.5-204-204-136.5-248.5-51-248.5 51-204 136.5-136.5 204-51 248.5 51 248.5 136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5zm128 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/></svg>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</ul>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -141,7 +122,7 @@ export default {
     console.log('Current group: ', this.$router.currentRoute.params.id);
     Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id)
       .then(groupResponse => {
-        this.data.group = groupResponse.data[0];
+        this.$data.group = groupResponse.data[0];
         console.log('Group: ', groupResponse.data[0]);
         if (groupResponse.data.length > 0) {
           Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members')
@@ -171,7 +152,8 @@ export default {
   .profile-header {
     display: flex;
     padding: 2.5rem 0 2.5rem 0;
-    background: #007bff;
+    background: #232323;
+    color: #ccc;
     overflow: hidden;
 
     .primary-info { width: 75%; }
@@ -186,7 +168,7 @@ export default {
       padding-bottom: .25rem;
     }
 
-    .user-stats {
+    .group-stats {
       display: flex;
       justify-content: flex-start;
       padding: 0;
@@ -288,6 +270,8 @@ export default {
     }
   }
 
+  .group-stats { fill: #ccc !important; }
+
   .upvotes svg { fill: green; }
   .downvotes svg { fill: red; }
 
@@ -335,7 +319,7 @@ export default {
       margin: .75rem 0 .75rem 0 !important;
     }
 
-    .user-stats, .votes {
+    .group-stats, .votes {
       display: flex;
       justify-content: center !important;
     }
