@@ -25,8 +25,11 @@
           <!--</li>-->
         </ul>
 
-        <div class="join-button" v-if="isInGroup">
+        <div class="join-button" v-if="!isInGroup">
           <button class="btn btn-primary" v-on:click="joinGroup">Join Group</button>
+        </div>
+        <div class="join-button" v-else>
+          <p class="text-success">You are a member</p>
         </div>
       </div>
     </div>
@@ -124,7 +127,7 @@ export default {
                   return value.username !== '';
                 });
 
-                this.$data.isInGroup = (this.$data.members.filter(item => item.username === store.state.currentUser['cognito:username']).length === 0);
+                this.$data.isInGroup = (this.$data.members.filter(item => item.username === store.state.currentUser['cognito:username']).length !== 0);
 
                 console.log('Members: ', this.$data.members);
               } else {
@@ -147,6 +150,29 @@ export default {
     joinGroup: function () {
       console.log(this.$store.state.currentUser['cognito:username'] + ' is joining group ' + this.group.groupName + '(' + this.group.groupId + ')');
       // document.querySelector('.join-button .btn').classList.add('d-none');
+      Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members', {
+        'userId': this.$store.state.currentUser.sub,
+        'username': this.$store.state.currentUser['cognito:username']
+      })
+        .then(joinResponse => {
+          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members')
+            .then(membersResponse => {
+              if (membersResponse.data.length > 0) {
+                this.$data.members = membersResponse.data.filter(function (value) {
+                  return value.username !== '';
+                });
+
+                console.log(this.$data.members)
+                this.$data.isInGroup = (this.$data.members.filter(item => item.username === store.state.currentUser['cognito:username']).length !== 0);
+              }
+            })
+            .catch(e => {
+              console.log(e);
+            })
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }
 }
@@ -305,6 +331,10 @@ export default {
 
   .join-button {
     margin-top: auto;
+
+    p {
+      margin: 0;
+    }
   }
 
   .root > div > div:nth-child(3) {
