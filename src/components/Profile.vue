@@ -51,9 +51,9 @@
       </div>-->
     </div>
 
-    <div class="interaction-bar col-md-12">
-      <a v-if="this.$router.currentRoute.params.id !== this.user.username" class="btn btn-primary">Send Friend Request</a>
-    </div>
+    <!--<div class="interaction-bar col-md-12">-->
+      <!--<a v-if="this.$router.currentRoute.params.id !== this.user.username" class="btn btn-primary">Send Friend Request</a>-->
+    <!--</div>-->
 
     <div class="profile-bio col-md-9">
       <h5>Bio:</h5>
@@ -78,7 +78,7 @@
             </li>
             <li v-else v-for="(group, index) in groups" :key="`group-${index}`">
               <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
-              <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: 'group/' + group.groupId }"></router-link>
+              <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: '/group/' + group.groupId }"></router-link>
               <div>
                 <router-link tag="h6" :to="{ path: '/group/' + group.groupId }">{{ group.groupName }}</router-link>
                 <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
