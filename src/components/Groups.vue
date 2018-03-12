@@ -12,7 +12,7 @@
       <div class="hr"></div>
       <div class="groupsContainer">
         <div class="row">
-          <p v-if="this.gameName">Filtered by:<a>{{this.gameName}}</a><button class="btn btn-primary">Show all Groups</button></p>
+          <p class="filter-row" v-if="this.gameName">Filtered by: {{this.gameName}} <button v-on:click="getAllGroups" class="btn btn-danger btn-clear-filter">Clear Filter</button></p>
         <div class="groupCard" :key="group.groupId" v-for="group in groups">
           <router-link class="r-link" :to="{ path: '/dashboard/group/' + group.groupId, props: {groupID: group.groupId}}">
             <div class="imgContainer">
@@ -84,6 +84,17 @@ export default {
       this.groups = [];
       console.log(game.gameId)
       Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions/forgame/' + game.gameId)
+        .then(response => {
+          this.groups = response.data;
+        })
+        .catch(e => {
+          console.log(e)
+        });
+    },
+    getAllGroups () {
+      this.gameName = '';
+      this.groups = [];
+      Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups')
         .then(response => {
           this.groups = response.data;
         })
@@ -164,6 +175,9 @@ export default {
   }
   .gameLogo {
     height: 5.5em;
+    &:hover {
+      cursor: pointer;
+    }
   }
   .hr {
     margin: 15px 0;
@@ -282,6 +296,18 @@ export default {
     display: flex;
     align-items: center;
   }
+  .filter-row {
+    width: 100%;
+    background: #272727;
+    padding: .5rem 1rem;
+    border-radius: 3px;
+    color: #f4c92e;
+    border: 1px solid black;
+    margin-bottom: .5rem;
+  }
+  .btn-clear-filter {
+    float: right;
+  }
 
   ::-webkit-scrollbar {
     height: 5px;
@@ -312,9 +338,6 @@ export default {
     }
     .medal {
       height: 1.4em;
-    }
-    .groupsContainer {
-      margin-left: .5rem;
     }
   }
 </style>
