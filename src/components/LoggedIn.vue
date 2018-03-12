@@ -63,7 +63,7 @@
       <div class="groupsContainer">
         <p v-if="!hasGroups">You haven't joined any groups. Click the groups link at the top to get started!</p>
           <div class="groupCard" :key="group.groupId" v-for="group in groups">
-            <router-link class="r-link" :to="{ path: '/dashboard/group/' + group.groupId, props: {groupID: group.groupId}}" v-on:click="say(asdf)">
+            <router-link class="r-link" :to="{ path: '/group/' + group.groupId, props: {groupID: group.groupId}}" v-on:click="say(asdf)">
             <div class="groupName ">
               <b>{{group.groupName}}</b>
             </div>
