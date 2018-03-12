@@ -220,7 +220,7 @@ export default {
         } else {
           this.group.userId = this.$store.state.currentUser.sub;
           // Axios.post('http://httpbin.org/post', this.group, {
-          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId, {
+          return Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId, {
             headers: {
               'Authorization': token
             }
@@ -256,7 +256,7 @@ export default {
           console.log(err);
         } else {
           this.group.userId = this.$store.state.currentUser.sub;
-          Axios.put('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId, this.group, {
+          return Axios.put('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId, this.group, {
             headers: {
               'Authorization': token
             }
@@ -281,7 +281,7 @@ export default {
           console.log(err);
         } else {
           this.group.userId = this.$store.state.currentUser.sub;
-          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId + '/admins', {
+          return Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + groupId + '/admins', {
             headers: {
               'Authorization': token
             }
