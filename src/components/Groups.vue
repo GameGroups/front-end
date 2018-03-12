@@ -4,7 +4,7 @@
       <h2 class="games-h2">Select a Game</h2>
       <div class="gamesContainer">
           <template  v-for="game in games" v-if="game.gameId == 'f0b738d4-0165-4425-8bb0-6ca863c77a19'">
-            <img :key="game.gameId" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
+            <img v-on:click="filterGame(game.gameId)" :key="game.gameId" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
           </template>
       </div>
 
@@ -77,6 +77,16 @@ export default {
     logout: function () {
       this.$cognitoAuth.logout();
       this.$router.replace(this.$route.query.redirect || '/');
+    },
+    filterGame (game) {
+      this.groups = [];
+      Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions/forgame/' + game.gameId)
+        .then(response => {
+          this.groups = response.data;
+        })
+        .catch(e => {
+          console.log(e)
+        });
     }
   },
   created: function () {
