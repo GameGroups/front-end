@@ -3,19 +3,16 @@
     <div class="col-md-12">
       <h2 class="games-h2">Select a Game</h2>
       <div class="gamesContainer">
-        <div class="game" :key="game.gameId" v-for="game in games">
-          <template>
-            <img class="gameLogo" src="http://via.placeholder.com/150x150"/>
-            <p class="gameLabel">{{game.gameName}}</p>
+          <template  v-for="game in games" v-if="game.gameId == 'f0b738d4-0165-4425-8bb0-6ca863c77a19'">
+            <img :key="game.gameId" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
           </template>
-        </div>
       </div>
 
       <div class="hr"></div>
       <h2 class="games-h2">Groups</h2>
       <div class="groupsContainer">
         <div class="row">
-        <div class="groupCard col-md-6" :key="group.groupId" v-for="group in groups">
+        <div class="groupCard" :key="group.groupId" v-for="group in groups">
           <router-link class="r-link" :to="{ path: '/dashboard/group/' + group.groupId, props: {groupID: group.groupId}}">
             <div class="imgContainer">
               <div style="height: 100%">
@@ -45,7 +42,7 @@
               </div>
             </div>
           </router-link>
-        </div>
+          </div>
         </div>
       </div>
     </div>
@@ -102,13 +99,14 @@ export default {
           return;
         }
         this.token = jwtDecode(jwtToken);
+        console.log(jwtToken);
         this.user = this.$cognitoAuth.getCurrentUser();
         let config = {
           headers: { 'Authorization': jwtToken }
         };
         Axios.all([
-          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/games', config),
-          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', config)
+          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/games'),
+          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups')
         ])
           .then(Axios.spread((games, groups) => {
             this.games = games.data;
@@ -161,16 +159,13 @@ export default {
   }
   .groupsContainer {
     display: flex;
-    flex-basis: 45%;
-    flex-wrap: wrap;
-    // flex-direction: column;
-    margin: 1em auto;
-    justify-content: flex-start;
+    max-width: 800px;
+    flex-direction: column;
+    margin-left: 15px;
+    flex-wrap: nowrap;
   }
   .groupCard {
-    // min-width: 50%;
-    min-width: 48%;
-    max-width: 48%;
+    width: 100%;
     margin-bottom: .5rem;
     margin-right: .5rem;
     font-size: .8em;
@@ -178,7 +173,6 @@ export default {
     border-radius: 3px;
     overflow: hidden;
     border: 1px solid #cccccc;
-    // &:nth-child(even) { margin-right: .5rem; }
   }
   .groupName {
     color: black;
@@ -189,6 +183,7 @@ export default {
     height: 6rem;
   }
   .r-link {
+    color: grey;
     display: flex;
     text-decoration: none;
     flex-direction: row;
@@ -304,6 +299,9 @@ export default {
     }
     .medal {
       height: 1.4em;
+    }
+    .groupsContainer {
+      margin-left: .5rem;
     }
   }
 </style>
