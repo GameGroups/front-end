@@ -28,7 +28,7 @@
         <div class="logged-in-user">
           <router-link class="displayname" tag="span" to="/profile">{{ $store.state.currentUser.nickname }}</router-link>
           <span class="settings">
-            <router-link to="/account-settings">Account</router-link> |
+            <router-link to="/myaccount/details">Account</router-link> |
             <router-link to="/logout">Logout</router-link>
           </span>
         </div>
