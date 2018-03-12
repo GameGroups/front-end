@@ -56,7 +56,7 @@
       </div>
 
       <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
-        <ul>
+        <ul class="col-md-12">
           <li v-if="!members">
             <p>This group has no members.</p>
           </li>
@@ -64,7 +64,7 @@
             <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
             <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: '/user/' + member.username }"></router-link>
             <div>
-              <router-link tag="h6" :to="{ path: '/user/' + member.username }">{{ member.nickname }}</router-link>
+              <router-link tag="a" :to="{ path: '/user/' + member.username }">{{ member.username }}</router-link>
               <!--<h6 class="text-muted">{{ group.memberCount }} Members</h6>-->
             </div>
           </li>
@@ -339,6 +339,26 @@ export default {
 
   .root > div > div:nth-child(3) {
     padding: 0;
+  }
+
+  #members {
+    ul {
+      padding-left: 0 !important;
+      // display: flex;
+
+      li {
+        display: flex;
+        margin-right: 1rem;
+        margin-bottom: .5rem;
+        width: 100%;
+
+        div {
+          display: flex;
+          align-self: center;
+          padding-left: .5rem;
+        }
+      }
+    }
   }
 
   @media (max-width: 767px) {
