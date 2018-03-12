@@ -7,6 +7,10 @@ import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
 import CreateGroup from '@/components/CreateGroup';
+import Profile from '@/components/Profile';
+import ResetPassword from '@/components/ResetPassword';
+import ResetSuccess from '@/components/ResetPassword-Success';
+import ResetConfrim from '@/components/ResetPassword-Confirm';
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -21,9 +25,11 @@ export default new Router({
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
     { path: '/dashboard', component: LoggedIn },
-    { path: '/reset_password', component: NotFound }, // Change me
-    { path: '/confirm_reset_password', component: NotFound }, // Change me
     { path: '/create_group', component: CreateGroup },
+    { path: '/reset_password', component: ResetPassword }, // Change me
+    { path: '/reset_password_success', component: ResetSuccess }, // Change me
+    { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
+    { path: '/user/:id', component: Profile },
     {
       // 404 for all routes that don't match
       path: '*',

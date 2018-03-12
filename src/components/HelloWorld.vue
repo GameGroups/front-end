@@ -17,7 +17,7 @@ export default {
       amp: undefined // "amp" has no value
     }
   },
-  data () {
+  data: function () {
     return {
       msg: 'Hello World!'
     };

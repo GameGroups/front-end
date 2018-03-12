@@ -28,7 +28,7 @@
 <script>
 export default {
   name: 'AppFooter',
-  data () {
+  data: function () {
     return {};
   },
   methods: {
@@ -81,7 +81,7 @@ export default {
 
   .resources-container {
     padding: 15px 15px 15px 30px;
-    
+
     a {
       display: block;
     }
