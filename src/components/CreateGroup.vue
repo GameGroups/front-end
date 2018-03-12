@@ -82,7 +82,6 @@
           <span class="form-label">Select which game you play</span>
           <label class="control-label"></label>
           <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Game') }" id="Game" name="Game" v-model="group.game" required>
-          <!-- <select class="form-control gameSelect" required> -->
             <option value="">Select a Game...</option>
             <option>Guild Wars 2</option>
           </select>
@@ -215,25 +214,26 @@ export default {
           this.group.userId = this.$store.state.currentUser.sub;
           this.group.username = this.$store.state.currentUser['cognito:username'];
           // Axios.post('http://httpbin.org/post', this.group, {
-          Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.group, {
+          return Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.group, {
             headers: {
               'Authorization': token
             }
           })
             .then(response => {
+              console.log('Create group successful:', response);
               var postData = {
                 gameId: 'f0b738d4-0165-4425-8bb0-6ca863c77a19',
-                entityId: response[0].groupId,
-                entityType: 'group'
+                entityId: response.data[0].groupId
               }
-              Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions', this.postData, {
+              // return Axios.post('http://httpbin.org/post', postData, {
+              return Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions', postData, {
                 headers: {
                   'Authorization': token
                 }
               })
             })
             .then(response => {
-              console.log('Create group successful:', response);
+              console.log('subscription added successful:', response);
               this.$router.replace({ path: '/dashboard' }); // route to dashboard - they should see the created group here
             })
             .catch(e => {
