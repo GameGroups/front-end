@@ -130,7 +130,7 @@ export default {
 
     .resources-container {
       text-align: center;
-      padding: 15px 15px 0px 30px;
+      padding: 15px 15px 0px 15px;
 
       a {
         padding: .5rem 0 .5rem 0;

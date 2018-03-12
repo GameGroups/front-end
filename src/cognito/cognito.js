@@ -3,27 +3,29 @@ import {CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribut
 
 export default class CognitoAuth {
   constructor () {
-    this.userSession = null
+    this.userSession = null;
   }
 
   configure (config) {
     if (typeof config !== 'object' || Array.isArray(config)) {
-      throw new Error('[CognitoAuth error] valid option object required')
+      throw new Error('[CognitoAuth error] valid option object required');
     }
     // used to inject an alternate pool if required for testing
     if (config.userPool) {
-      this.userPool = config.userPool
+      this.userPool = config.userPool;
     } else {
       this.userPool = new CognitoUserPool({
         UserPoolId: config.UserPoolId,
         ClientId: config.ClientId
-      })
+      });
     }
-    Config.region = config.region
+    Config.region = config.region;
+
     Config.credentials = new CognitoIdentityCredentials({
       IdentityPoolId: config.IdentityPoolId
-    })
-    this.options = config
+    });
+
+    this.options = config;
   }
 
   isAuthenticated (cb) {
@@ -126,6 +128,25 @@ export default class CognitoAuth {
     })
   }
 
+  resendVerificationCode (attribute, cb) {
+    let cognitoUser = this.getCurrentUser();
+    cognitoUser.getSession((err, session) => {
+      if (err) {
+        cb(err);
+      }
+      if (session) {
+        cognitoUser.getAttributeVerificationCode(attribute, {
+          onSuccess: (result) => {
+            cb(null, result)
+          },
+          onFailure: function (err) {
+            cb(err)
+          }
+        })
+      }
+    })
+  }
+
   signin (username, pass, cb) {
     let authenticationDetails = new AuthenticationDetails({
       Username: username,
@@ -181,6 +202,12 @@ export default class CognitoAuth {
 
   getCurrentUser () {
     return this.userPool.getCurrentUser()
+  }
+
+  getUserByUsername (username, cb) {
+    return this.userPool.GetUser({
+      username: username
+    });
   }
 
   // very primitive change listener
