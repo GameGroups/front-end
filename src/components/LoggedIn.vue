@@ -101,7 +101,6 @@ export default {
       loggedIn: false,
       hasGroups: false,
       hasGames: false,
-      gw2Logo: require('../assets/GW2_Logo.png'),
       groups: [],
       gameSubs: []
     }
