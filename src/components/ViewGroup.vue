@@ -62,6 +62,7 @@
           </li>
           <li v-else v-for="(member, index) in members" :key="`member-${index}`">
             <!--<img class="img-fluid" src="http://via.placeholder.com/50x50" />-->
+            <svg v-on:click="leaveGroup" v-if="member.username === $store.state.currentUser['cognito:username']" class="x-svg" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
             <router-link tag="img" class="img-fluid" src="http://via.placeholder.com/50x50" :to="{ path: '/user/' + member.username }"></router-link>
             <div>
               <router-link tag="a" :to="{ path: '/user/' + member.username }">{{ member.username }}</router-link>
@@ -155,6 +156,7 @@ export default {
         'username': this.$store.state.currentUser['cognito:username']
       })
         .then(joinResponse => {
+          // Update groups
           Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members')
             .then(membersResponse => {
               if (membersResponse.data.length > 0) {
@@ -173,6 +175,66 @@ export default {
         .catch(e => {
           console.error(e);
         });
+    },
+    leaveGroup: function () {
+      let config = {};
+      if (this.$store.state.loggedIn) {
+        this.$cognitoAuth.getIdToken((err, jwtToken) => {
+          if (err) {
+            console.log("Couldn't get the session:", err, err.stack);
+            return;
+          }
+
+          config = {
+            headers: { 'Authorization': jwtToken }
+          };
+
+          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members')
+            .then(response => {
+              if (response.data.length > 0) {
+                console.log(response);
+                for (var i = 0; i < response.data.length; i++) {
+                  if (response.data[i].userId === store.state.currentUser.sub) {
+                    this.memberId = response.data[i].groupMemberId;
+                  }
+                }
+                Axios.delete('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members/' + this.memberId)
+                  .then(response => {
+                    Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/foruser/' + store.state.currentUser.sub)
+                      .then(response => {
+                        if (response.data.length > 0) {
+                          Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups/' + this.$router.currentRoute.params.id + '/members')
+                            .then(membersResponse => {
+                              if (membersResponse.data.length > 0) {
+                                this.$data.members = membersResponse.data.filter(function (value) {
+                                  return value.username !== '';
+                                });
+
+                                console.log(this.$data.members)
+                                this.$data.isInGroup = (this.$data.members.filter(item => item.username === store.state.currentUser['cognito:username']).length !== 0);
+                              }
+                            })
+                            .catch(e => {
+                              console.log(e);
+                            })
+                        }
+                      })
+                      .catch(e => {
+                        console.log(e)
+                      });
+                  })
+                  .catch(e => {
+                    console.log(e);
+                  })
+              }
+            })
+            .catch(e => {
+              console.log(e)
+            });
+        });
+      } else {
+        this.$router.replace(this.$route.query.redirect || '/login');
+      }
     }
   }
 }
@@ -357,6 +419,15 @@ export default {
           align-self: center;
           padding-left: .5rem;
         }
+      }
+
+      .x-svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        align-self: center;
+        margin-right: 1rem;
+        fill: red;
+        cursor: pointer;
       }
     }
   }
