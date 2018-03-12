@@ -2,12 +2,17 @@
   <div class="logged-in row" v-if="$store.state.loggedIn">
     <div class="col-md-12">
         <router-link to="/myaccount/games" class="gamesTitle">
-          <svg class="edit fa-spin-hover" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 896q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm512-109v222q0 12-8 23t-20 13l-185 28q-19 54-39 91 35 50 107 138 10 12 10 25t-9 23q-27 37-99 108t-94 71q-12 0-26-9l-138-108q-44 23-91 38-16 136-29 186-7 28-36 28h-222q-14 0-24.5-8.5t-11.5-21.5l-28-184q-49-16-90-37l-141 107q-10 9-25 9-14 0-25-11-126-114-165-168-7-10-7-23 0-12 8-23 15-21 51-66.5t54-70.5q-27-50-41-99l-183-27q-13-2-21-12.5t-8-23.5v-222q0-12 8-23t19-13l186-28q14-46 39-92-40-57-107-138-10-12-10-24 0-10 9-23 26-36 98.5-107.5t94.5-71.5q13 0 26 10l138 107q44-23 91-38 16-136 29-186 7-28 36-28h222q14 0 24.5 8.5t11.5 21.5l28 184q49 16 90 37l142-107q9-9 24-9 13 0 25 10 129 119 165 170 7 8 7 22 0 12-8 23-15 21-51 66.5t-54 70.5q26 50 41 98l183 28q13 2 21 12.5t8 23.5z"/></svg>
+          <div class="cog-div">
+            <svg class="edit fa-spin-hover" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 896q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm512-109v222q0 12-8 23t-20 13l-185 28q-19 54-39 91 35 50 107 138 10 12 10 25t-9 23q-27 37-99 108t-94 71q-12 0-26-9l-138-108q-44 23-91 38-16 136-29 186-7 28-36 28h-222q-14 0-24.5-8.5t-11.5-21.5l-28-184q-49-16-90-37l-141 107q-10 9-25 9-14 0-25-11-126-114-165-168-7-10-7-23 0-12 8-23 15-21 51-66.5t54-70.5q-27-50-41-99l-183-27q-13-2-21-12.5t-8-23.5v-222q0-12 8-23t19-13l186-28q14-46 39-92-40-57-107-138-10-12-10-24 0-10 9-23 26-36 98.5-107.5t94.5-71.5q13 0 26 10l138 107q44-23 91-38 16-136 29-186 7-28 36-28h222q14 0 24.5 8.5t11.5 21.5l28 184q49 16 90 37l142-107q9-9 24-9 13 0 25 10 129 119 165 170 7 8 7 22 0 12-8 23-15 21-51 66.5t-54 70.5q26 50 41 98l183 28q13 2 21 12.5t8 23.5z"/></svg>
+          </div>
           <h2 class="games-h2">Your Games</h2>
         </router-link>
       <div class="gamesContainer">
         <div class="game" :key="sub.subscriptionId" v-for="sub in gameSubs">
-          <img v-if="sub.gameName == 'Guild Wars 2'" class="gameLogo" src="../assets/GW2_Logo.png"/>
+          <img v-if="sub.gameName == 'Guild Wars 2'" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
+          <img v-else-if="sub.gameName == 'Postman'" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/postman.png"/>
+          <img v-else-if="sub.gameName == 'World of Warcraft'" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/WoW_Cataclysm.png"/>
+          <img v-else-if="sub.gameName == 'Monster Hunter World'" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/mhw.png"/>
           <template v-else>
             <img class="gameLogo" src="http://via.placeholder.com/150x150"/>
             <p class="gameLabel">{{sub.gameName}}</p>
@@ -45,7 +50,9 @@
 
       <div class="hr"></div>
       <router-link to="/myaccount/groups" class="gamesTitle">
-        <svg class="edit fa-spin-hover" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 896q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm512-109v222q0 12-8 23t-20 13l-185 28q-19 54-39 91 35 50 107 138 10 12 10 25t-9 23q-27 37-99 108t-94 71q-12 0-26-9l-138-108q-44 23-91 38-16 136-29 186-7 28-36 28h-222q-14 0-24.5-8.5t-11.5-21.5l-28-184q-49-16-90-37l-141 107q-10 9-25 9-14 0-25-11-126-114-165-168-7-10-7-23 0-12 8-23 15-21 51-66.5t54-70.5q-27-50-41-99l-183-27q-13-2-21-12.5t-8-23.5v-222q0-12 8-23t19-13l186-28q14-46 39-92-40-57-107-138-10-12-10-24 0-10 9-23 26-36 98.5-107.5t94.5-71.5q13 0 26 10l138 107q44-23 91-38 16-136 29-186 7-28 36-28h222q14 0 24.5 8.5t11.5 21.5l28 184q49 16 90 37l142-107q9-9 24-9 13 0 25 10 129 119 165 170 7 8 7 22 0 12-8 23-15 21-51 66.5t-54 70.5q26 50 41 98l183 28q13 2 21 12.5t8 23.5z"/></svg>
+        <div class="cog-div">
+          <svg class="edit fa-spin-hover" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 896q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm512-109v222q0 12-8 23t-20 13l-185 28q-19 54-39 91 35 50 107 138 10 12 10 25t-9 23q-27 37-99 108t-94 71q-12 0-26-9l-138-108q-44 23-91 38-16 136-29 186-7 28-36 28h-222q-14 0-24.5-8.5t-11.5-21.5l-28-184q-49-16-90-37l-141 107q-10 9-25 9-14 0-25-11-126-114-165-168-7-10-7-23 0-12 8-23 15-21 51-66.5t54-70.5q-27-50-41-99l-183-27q-13-2-21-12.5t-8-23.5v-222q0-12 8-23t19-13l186-28q14-46 39-92-40-57-107-138-10-12-10-24 0-10 9-23 26-36 98.5-107.5t94.5-71.5q13 0 26 10l138 107q44-23 91-38 16-136 29-186 7-28 36-28h222q14 0 24.5 8.5t11.5 21.5l28 184q49 16 90 37l142-107q9-9 24-9 13 0 25 10 129 119 165 170 7 8 7 22 0 12-8 23-15 21-51 66.5t-54 70.5q26 50 41 98l183 28q13 2 21 12.5t8 23.5z"/></svg>
+        </div>
         <h2 class="games-h2">Your Groups</h2>
       </router-link>
       <div class="groupsContainer">
@@ -176,7 +183,7 @@ export default {
     padding-top: 2rem;
   }
   .gameLogo {
-    height: 5.5em;
+    height: 5em;
   }
   .hr {
     margin: 15px 0;
@@ -229,12 +236,21 @@ export default {
     align-items: center;
   }
   .edit {
-    height: 2.3em;
-    fill: grey;
+    fill: black;
+    height: 1.8em;
   }
-  .edit:hover {
+  .cog-div {
+    margin-right: .5rem;
+    display: flex;
+    padding: .2rem;
+    background: lightgray;
+    border: 1px solid #a2a2a2;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+  .cog-div:hover {
     cursor: pointer;
-    fill: grey;
+
   }
   .minus {
     fill: #f35a5a;
@@ -253,7 +269,10 @@ export default {
   .games-h2 {
     display: inline-block;
     color: black;
-    margin-left: 15px;
+    margin-bottom: 4px;
+    &:hover {
+      cursor: default;
+    }
   }
   .gameLabel {
     font-size: .8em;
@@ -269,10 +288,7 @@ export default {
   @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
   @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
   @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-  .gamesTitle:hover {
-    .games-h2 {
-      color: #626262;
-    }
+  .cog-div:hover {
     .edit {
       -webkit-animation: spin 3s linear infinite ;
       -moz-animation: spin 3s linear infinite;
