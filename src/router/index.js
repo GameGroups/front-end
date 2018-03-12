@@ -7,7 +7,13 @@ import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
 import CreateGroup from '@/components/CreateGroup';
+import Settings from '@/components/Settings';
+import settingsAccount from '@/components/Settings-Account';
+import settingsGroups from '@/components/Settings-Groups';
+import settingsDetails from '@/components/Settings-Details';
+import settingsGames from '@/components/Settings-Games';
 import Profile from '@/components/Profile';
+import ViewGroup from '@/components/ViewGroup';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
@@ -27,9 +33,30 @@ export default new Router({
     { path: '/dashboard', component: LoggedIn },
     { path: '/create_group', component: CreateGroup },
     { path: '/reset_password', component: ResetPassword }, // Change me
+    { path: '/myaccount',
+      component: Settings,
+      children: [
+        {
+          path: 'profile',
+          component: settingsAccount
+        },
+        {
+          path: 'groups',
+          component: settingsGroups
+        },
+        {
+          path: 'games',
+          component: settingsGames
+        },
+        {
+          path: 'details',
+          component: settingsDetails
+        }]
+    },
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
     { path: '/user/:id', component: Profile },
+    { path: '/group/:id', component: ViewGroup },
     {
       // 404 for all routes that don't match
       path: '*',
