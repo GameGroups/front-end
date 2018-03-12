@@ -78,15 +78,18 @@
           <i v-show="errors.has('Time Commitment')"></i>
           <p v-show="errors.has('Time Commitment')" class="help-error">{{ errors.first('Time Commitment') }}</p>
         </div>
-        <!-- <span class="form-label">Select your top 3 games</span>
-        <div id="game1" class="form-group required">
-          <label class="control-label">1. </label>
-          <select class="form-control gameSelect" required>
+        <div class="form-group required">
+          <span class="form-label">Select which game you play</span>
+          <label class="control-label"></label>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Game') }" id="Game" name="Game" v-model="group.game" required>
+          <!-- <select class="form-control gameSelect" required> -->
             <option value="">Select a Game...</option>
             <option>Guild Wars 2</option>
           </select>
+          <i v-show="errors.has('Game')"></i>
+          <p v-show="errors.has('Game')" class="help-error">{{ errors.first('Game') }}</p>
         </div>
-        <div class="form-group required" id="game2">
+        <!-- <div class="form-group required" id="game2">
           <label class="noAst">2. </label>
           <select class="form-control gameSelect" disabled>
             <option value="">Coming Soon...</option>
@@ -172,13 +175,15 @@ export default {
       seen: true,
       group: {
         groupName: '',
+        game: '',
         // games: [{gameID: 1, name: guild wars 2, logo: url}]
         region: '',
         skillLevel: '',
         timeCommitment: '',
         groupDescription: '',
         profileImage: 'http://via.placeholder.com/50x50',
-        userId: ''
+        userId: '',
+        username: ''
       },
       image: {
         show: false,
@@ -206,13 +211,27 @@ export default {
         if (err) {
           console.log(err);
         } else {
+          console.log(this.$store.state.currentUser);
           this.group.userId = this.$store.state.currentUser.sub;
+          this.group.username = this.$store.state.currentUser['cognito:username'];
           // Axios.post('http://httpbin.org/post', this.group, {
           Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/groups', this.group, {
             headers: {
               'Authorization': token
             }
           })
+            .then(response => {
+              var postData = {
+                gameId: 'f0b738d4-0165-4425-8bb0-6ca863c77a19',
+                entityId: response[0].groupId,
+                entityType: 'group'
+              }
+              Axios.post('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions', this.postData, {
+                headers: {
+                  'Authorization': token
+                }
+              })
+            })
             .then(response => {
               console.log('Create group successful:', response);
               this.$router.replace({ path: '/dashboard' }); // route to dashboard - they should see the created group here
