@@ -1,17 +1,18 @@
 <template>
   <div class="logged-in row" v-if="loggedIn">
     <div class="col-md-12">
-      <h2 class="games-h2">Select a Game</h2>
+      <h2 class="games-h2">Explore Groups</h2>
+      <p>Filter by a game by selecting an icon below</p>
       <div class="gamesContainer">
           <template  v-for="game in games" v-if="game.gameId == 'f0b738d4-0165-4425-8bb0-6ca863c77a19'">
-            <img v-on:click="filterGame(game.gameId)" :key="game.gameId" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
+            <img v-on:click="filterGame(game), gameName = game.gameName" :key="game.gameId" class="gameLogo" src="https://s3.us-east-2.amazonaws.com/gamegroups/Guild_Wars_2_logo.svg"/>
           </template>
       </div>
 
       <div class="hr"></div>
-      <h2 class="games-h2">Groups</h2>
       <div class="groupsContainer">
         <div class="row">
+          <p v-if="this.gameName">Filtered by:<a>{{this.gameName}}</a><button class="btn btn-primary">Show all Groups</button></p>
         <div class="groupCard" :key="group.groupId" v-for="group in groups">
           <router-link class="r-link" :to="{ path: '/dashboard/group/' + group.groupId, props: {groupID: group.groupId}}">
             <div class="imgContainer">
@@ -69,6 +70,7 @@ export default {
       loggedIn: false,
       hasGroups: false,
       hasGames: false,
+      gameName: '',
       groups: [],
       games: []
     }
@@ -80,6 +82,7 @@ export default {
     },
     filterGame (game) {
       this.groups = [];
+      console.log(game.gameId)
       Axios.get('https://lxcrjbnnlj.execute-api.us-east-2.amazonaws.com/Develop/subscriptions/forgame/' + game.gameId)
         .then(response => {
           this.groups = response.data;
@@ -171,13 +174,13 @@ export default {
     display: flex;
     max-width: 800px;
     flex-direction: column;
-    margin-left: 15px;
+    margin: 0 auto;
     flex-wrap: nowrap;
+    margin-bottom: 35px;
   }
   .groupCard {
     width: 100%;
     margin-bottom: .5rem;
-    margin-right: .5rem;
     font-size: .8em;
     background: #e0dfdf;
     border-radius: 3px;
