@@ -34,7 +34,7 @@ export default {
       amp: undefined // "amp" has no value
     }
   },
-  data () {
+  data: function () {
     return {
       username: this.$route.query.username,
       code: '',

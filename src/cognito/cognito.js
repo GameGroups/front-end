@@ -86,11 +86,14 @@ export default class CognitoAuth {
       },
       onFailure: function (err) {
         cb(err)
-      },
+      } /*,
       inputVerificationCode () {
-        // cb(Error('Verification code not implemented.'))
+        //cb(Error('Verification code not implemented.'))
+        var verificationCode = prompt('Please input verification code ', '');
+        var newPassword = prompt('Enter new password ', '');
+        //cognitoUser.confirmPassword(verificationCode, newPassword, this);
         cb()
-      }
+      } */
     })
   }
 

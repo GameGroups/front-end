@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style lang="scss" type="text/scss">
-  @import "../node_modules/bootstrap/scss/bootstrap.scss";
+  @import "./node_modules/bootstrap/scss/bootstrap.scss";
 
   // Global CSS goes here
 

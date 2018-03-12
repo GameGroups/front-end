@@ -72,7 +72,7 @@ export default {
       amp: undefined // "amp" has no value
     }
   },
-  data () {
+  data: function () {
     return {
       loggedIn: false,
       guildWars2HTML: svgData.svgData.GUILD_WARS_2,

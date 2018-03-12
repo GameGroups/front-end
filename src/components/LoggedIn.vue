@@ -1,19 +1,20 @@
 <template>
-  <div class="logged-in row" v-if="loggedIn">
+  <div class="logged-in row" v-if="$store.state.loggedIn">
     <div class="col-md-12">
-      <h2>Welcome, {{ this.token.nickname }}!</h2>
+      <h2>Welcome, {{ $store.state.currentUser.nickname }}!</h2>
     </div>
 
     <div class="col-md-12">
       <ul>
-        <li><p class="mb-0">Username: {{ this.token["cognito:username"] }}</p></li>
-        <li><p>{{ this.token.email }}</p></li>
+        <li><p class="mb-0">Username: {{ $store.state.currentUser["cognito:username"] }}</p></li>
+        <li><p>{{ $store.state.currentUser.email }}</p></li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import store from '../store';
 import jwtDecode from 'jwt-decode';
 
 export default {
@@ -37,31 +38,8 @@ export default {
       this.$router.replace(this.$route.query.redirect || '/');
     }
   },
-  created: function () {
-    this.$cognitoAuth.isAuthenticated((err, loggedIn) => {
-      if (err) {
-        console.err("Login: Couldn't get the session:", err, err.stack);
-      } else {
-        this.loggedIn = loggedIn;
-        if (!loggedIn) {
-          this.$router.replace(this.$route.query.redirect || '/login');
-        }
-      }
-    });
-  },
   beforeMount () {
-    if (this.loggedIn) {
-      this.$cognitoAuth.getIdToken((err, jwtToken) => {
-        if (err) {
-          console.log("Dashboard: Couldn't get the session:", err, err.stack);
-          return;
-        }
-
-        this.token = jwtDecode(jwtToken);
-        this.user = this.$cognitoAuth.getCurrentUser();
-        console.log(this.token);
-      });
-    } else {
+    if (!store.state.loggedIn) {
       this.$router.replace(this.$route.query.redirect || '/login');
     }
   }
