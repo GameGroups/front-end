@@ -78,15 +78,17 @@
           <i v-show="errors.has('Time Commitment')"></i>
           <p v-show="errors.has('Time Commitment')" class="help-error">{{ errors.first('Time Commitment') }}</p>
         </div>
-        <!-- <span class="form-label">Select your top 3 games</span>
-        <div id="game1" class="form-group required">
-          <label class="control-label">1. </label>
-          <select class="form-control gameSelect" required>
+        <div class="form-group required">
+          <span class="form-label">Select which game you play</span>
+          <label class="control-label"></label>
+          <select v-validate="'required'" :class="{'form-control': true, 'input-error': errors.has('Game') }" id="Game" name="Game" v-model="group.game" required>
             <option value="">Select a Game...</option>
             <option>Guild Wars 2</option>
           </select>
+          <i v-show="errors.has('Game')"></i>
+          <p v-show="errors.has('Game')" class="help-error">{{ errors.first('Game') }}</p>
         </div>
-        <div class="form-group required" id="game2">
+        <!-- <div class="form-group required" id="game2">
           <label class="noAst">2. </label>
           <select class="form-control gameSelect" disabled>
             <option value="">Coming Soon...</option>
@@ -174,6 +176,7 @@ export default {
       seen: true,
       group: {
         groupName: 'Group',
+        game: '',
         // games: [{gameID: 1, name: guild wars 2, logo: url}]
         region: '',
         skillLevel: '',
@@ -234,6 +237,7 @@ export default {
                 this.group.region = response.data[0].region;
                 this.group.skillLevel = response.data[0].skillLevel;
                 this.group.timeCommitment = response.data[0].timeCommitment;
+                this.group.game = 'Guild Wars 2';
               }
             })
             .catch(e => {
