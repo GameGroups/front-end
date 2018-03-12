@@ -128,6 +128,25 @@ export default class CognitoAuth {
     })
   }
 
+  resendVerificationCode (attribute, cb) {
+    let cognitoUser = this.getCurrentUser();
+    cognitoUser.getSession((err, session) => {
+      if (err) {
+        cb(err);
+      }
+      if (session) {
+        cognitoUser.getAttributeVerificationCode(attribute, {
+          onSuccess: (result) => {
+            cb(null, result)
+          },
+          onFailure: function (err) {
+            cb(err)
+          }
+        })
+      }
+    })
+  }
+
   signin (username, pass, cb) {
     let authenticationDetails = new AuthenticationDetails({
       Username: username,
