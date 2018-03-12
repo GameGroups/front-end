@@ -38,7 +38,7 @@ export default {
       this.$router.replace(this.$route.query.redirect || '/');
     }
   },
-  beforeMount () {
+  beforeMount: function () {
     if (!store.state.loggedIn) {
       this.$router.replace(this.$route.query.redirect || '/login');
     }
