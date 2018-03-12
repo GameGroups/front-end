@@ -40,7 +40,7 @@
             <p>Are you sure you want to leave the group '{{this.groupName}}'?</p>
           </div>
           <div class="modal-footer">
-            <button v-on:click="leaveGroup" type="button" class="btn btn-primary" data-dismiss="modal">Yes, Delete</button>
+            <button v-on:click="leaveGroup" type="button" class="btn btn-primary" data-dismiss="modal">Yes, Leave</button>
             <button id="btn-cancel" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
           </div>
         </div>

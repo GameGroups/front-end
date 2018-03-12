@@ -33,7 +33,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete {{this.gameName}} from your games?</p>
+          <p>Are you sure you want to delete '{{this.gameName}}' from your games?</p>
         </div>
         <div class="modal-footer">
           <button v-on:click="deleteGame" type="button" class="btn btn-primary" data-dismiss="modal">Yes, Delete</button>
