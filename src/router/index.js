@@ -17,6 +17,7 @@ import ViewGroup from '@/components/ViewGroup';
 import ResetPassword from '@/components/ResetPassword';
 import ResetSuccess from '@/components/ResetPassword-Success';
 import ResetConfrim from '@/components/ResetPassword-Confirm';
+import UpdateGroup from '@/components/UpdateGroup'
 import store from '../store';
 import cognitoAuth from '../cognito';
 
@@ -55,6 +56,7 @@ export default new Router({
     },
     { path: '/reset_password_success', component: ResetSuccess }, // Change me
     { path: '/confirm_reset_password/:username', component: ResetConfrim, props: true },
+    { path: '/update_group/:groupId', component: UpdateGroup, props: true },
     { path: '/user/:id', component: Profile },
     { path: '/group/:id', component: ViewGroup },
     {
