@@ -28,7 +28,7 @@
         <div class="logged-in-user">
           <router-link class="displayname" tag="span" to="/profile">{{ $store.state.currentUser.nickname }}</router-link>
           <span class="settings">
-            <router-link to="/account-settings">Settings</router-link> |
+            <router-link to="/account-settings">Account</router-link> |
             <router-link to="/logout">Logout</router-link>
           </span>
         </div>
@@ -63,9 +63,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/scss">
 
-  .navbar-dark .navbar-nav .active > .nav-link .btn-login
+  .navbar-dark .navbar-nav .active > .nav-link
   {
-    color:#CFCCCB
+    color: #eee;
+  }
+  .navbar-dark .navbar-nav .nav-link {
+    color: #eee;
+    &:hover {
+      color: #CFCCCB;
+    }
   }
 
   .btn-login {
