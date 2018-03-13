@@ -6,7 +6,6 @@ import Signup from '@/components/Signup';
 import Confirm from '@/components/Confirm';
 import LoggedIn from '@/components/LoggedIn';
 import NotFound from '@/components/NotFound';
-import CreateGroup from '@/components/CreateGroup';
 import Settings from '@/components/Settings';
 import settingsAccount from '@/components/Settings-Account';
 import settingsGroups from '@/components/Settings-Groups';
@@ -33,8 +32,7 @@ export default new Router({
     { path: '/signup', component: Signup },
     { path: '/confirm', component: Confirm },
     { path: '/dashboard', component: LoggedIn },
-    { path: '/create_group', component: CreateGroup },
-    { path: '/reset_password', component: ResetPassword }, // Change me
+    { path: '/groups', component: Groups },
     { path: '/myaccount',
       component: Settings,
       children: [
@@ -61,6 +59,7 @@ export default new Router({
     { path: '/user/:id', component: Profile },
     { path: '/groups', component: group },
     { path: '/group/:id', component: ViewGroup },
+    { path: '/reset_password', component: ResetPassword }, // Change me
     {
       // 404 for all routes that don't match
       path: '*',
