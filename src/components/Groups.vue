@@ -14,7 +14,7 @@
         <div class="row">
           <p class="filter-row" v-if="this.gameName">Filtered by: {{this.gameName}} <button v-on:click="getAllGroups" class="btn btn-danger btn-clear-filter">Clear Filter</button></p>
           <div class="groupCard" :key="group.groupId" v-for="group in groups">
-            <router-link class="r-link" :to="{ path: '/dashboard/group/' + group.groupId, props: {groupID: group.groupId}}">
+            <router-link class="r-link" :to="{ path: '/group/' + group.groupId, props: {groupID: group.groupId}}">
               <div class="imgContainer">
                 <div style="height: 100%">
                   <img class="groupImg" src="http://via.placeholder.com/150x150"/>
