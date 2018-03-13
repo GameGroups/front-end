@@ -190,7 +190,7 @@ export default {
       };
       this.user.password = '';
       const authenticationDetails = new AuthenticationDetails(authenticationData);
-      const poolData = { UserPoolId: config.COGNITO_USER_POOL_ID.toString(),
+      const poolData = { UserPoolId: 'us-east-2_aRo6Xa58p',
         ClientId: config.COGNITO_CLIENT_ID
       };
       const userPool = new CognitoUserPool(poolData);
